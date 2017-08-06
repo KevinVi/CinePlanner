@@ -1,5 +1,6 @@
 package com.example.cinemaplanner.account.authentication;
 
+import com.example.cinemaplanner.account.exceptions.TokenExpiredException;
 import com.example.cinemaplanner.account.model.Account;
 import com.example.cinemaplanner.account.service.AccountService;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -91,8 +92,15 @@ public class TokenProvider {
         byte[] expectedKeyBytes = expectedKey.getBytes();
         byte[] externalKeyBytes = externalKey.getBytes();
 
-        return MessageDigest.isEqual(expectedKeyBytes, externalKeyBytes) && !new DateTime(externalDate).isBeforeNow();
-
+        if(MessageDigest.isEqual(expectedKeyBytes, externalKeyBytes)){
+            if (!new DateTime(externalDate).isBeforeNow()){
+                return true;
+            }else{
+                throw new TokenExpiredException();
+            }
+        }else{
+            return false;
+        }
     }
 
     /**

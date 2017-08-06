@@ -83,7 +83,7 @@ public class AccountService {
     public Account getAccountByLogin(String login) {
         Account account;
         try {
-            account = accountRepository.findByLogin(login).get(0);
+            account = accountRepository.findByLogin(login);
         } catch (IndexOutOfBoundsException e) {
             return null;
         }
@@ -173,6 +173,6 @@ public class AccountService {
      * @return account
      */
     public Account findByEmail(String email) {
-        return accountRepository.findAccountByEmail(email);
+        return accountRepository.findByLogin(email);
     }
 }
