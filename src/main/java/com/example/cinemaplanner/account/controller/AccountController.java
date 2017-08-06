@@ -1,22 +1,16 @@
 package com.example.cinemaplanner.account.controller;
 
-import com.example.cinemaplanner.account.authentication.AuthenticatedRequestBody;
 import com.example.cinemaplanner.account.authentication.AuthenticationManager;
-import com.example.cinemaplanner.account.authentication.ConnectionRequestBody;
 import com.example.cinemaplanner.account.authentication.Token;
-import com.example.cinemaplanner.account.exceptions.*;
+import com.example.cinemaplanner.account.exceptions.AccountAlreadyExist;
+import com.example.cinemaplanner.account.exceptions.AccountNotFoundException;
+import com.example.cinemaplanner.account.exceptions.SamePasswordException;
 import com.example.cinemaplanner.account.model.*;
 import com.example.cinemaplanner.account.service.AccountService;
 import com.example.cinemaplanner.config.PasswordGenerator;
 import com.example.cinemaplanner.mail.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -74,22 +68,23 @@ public class AccountController {
      * @return Account Data
      */
     @RequestMapping(value = "/my-account", method = POST)
-    public AccountData getMyAccount(@RequestBody Token token) {
-        Account account = authenticationManager.getAccountFromToken(token.getToken());
+    public AccountData getMyAccount(@RequestHeader(value="token") String token) {
+        Account account = authenticationManager.getAccountFromToken(token);
         AccountPublic accountP = new AccountPublic(account);
         return new AccountData(accountP);
     }
 
 
     /**
-     * Authenticate Account using login and password
+     * Authenticate Account using login and password.
      *
-     * @param connectionRequestBody login and password
+     * @param login login
+     * @param password password
      * @return token
      */
     @RequestMapping(value = "/authenticate", method = POST)
-    public Token authenticateAccount(@RequestBody ConnectionRequestBody connectionRequestBody) {
-        return new Token(authenticationManager.getTokenByAuthentication(connectionRequestBody.getLogin(), connectionRequestBody.getPassword()));
+    public Token authenticateAccount(@RequestHeader(value="login") String login,@RequestHeader(value="password") String password) {
+        return new Token(authenticationManager.getTokenByAuthentication(login, password));
     }
 
 
@@ -101,15 +96,15 @@ public class AccountController {
      * @throws Exception issue
      */
     @RequestMapping(value = "/password", method = POST)
-    public Token changePassword(@RequestBody AuthenticatedRequestBody<PasswordChange> password) throws Exception {
-        authenticationManager.mustBeValidToken(password.getToken());
-        accountService.validatePassword(password.getBody().getNewPassword());
+    public Token changePassword(@RequestHeader(value="token") String token, @RequestBody PasswordChange password) throws Exception {
+        authenticationManager.mustBeValidToken(token);
+        accountService.validatePassword(password.getNewPassword());
 
-        Account account = authenticationManager.getAccountFromToken(password.getToken());
-        if (!accountService.isSamePassword(password.getBody().getOldPassword(), account.getPassword())) {
+        Account account = authenticationManager.getAccountFromToken(token);
+        if (!accountService.isSamePassword(password.getOldPassword(), account.getPassword())) {
             throw new SamePasswordException();
         }
-        account.setPassword(password.getBody().getNewPassword());
+        account.setPassword(password.getNewPassword());
         accountService.updateAccount(account);
 
         return new Token(authenticationManager.getTokenByAccount(account));
@@ -123,20 +118,20 @@ public class AccountController {
      * @return AccountPublic
      */
     @RequestMapping(value = "/update", method = POST)
-    public AccountPublic changeInfo(@RequestBody AuthenticatedRequestBody<UserInfo> info) {
-        authenticationManager.mustBeValidToken(info.getToken());
-        Account account = authenticationManager.getAccountFromToken(info.getToken());
-        if (info.getBody().getFirstname() != null) {
-            if (!info.getBody().getFirstname().isEmpty()) {
-                if (!info.getBody().getFirstname().equals(account.getFirstName())) {
-                    account.setFirstName(info.getBody().getFirstname());
+    public AccountPublic changeInfo(@RequestHeader(value="token") String token,@RequestBody UserInfo info) {
+        authenticationManager.mustBeValidToken(token);
+        Account account = authenticationManager.getAccountFromToken(token);
+        if (info.getFirstname() != null) {
+            if (!info.getFirstname().isEmpty()) {
+                if (!info.getFirstname().equals(account.getFirstName())) {
+                    account.setFirstName(info.getFirstname());
                 }
             }
         }
-        if (info.getBody().getLastname() != null) {
-            if (!info.getBody().getLastname().isEmpty()) {
-                if (!info.getBody().getLastname().equals(account.getLastName())) {
-                    account.setLastName(info.getBody().getLastname());
+        if (info.getLastname() != null) {
+            if (!info.getLastname().isEmpty()) {
+                if (!info.getLastname().equals(account.getLastName())) {
+                    account.setLastName(info.getLastname());
                 }
             }
         }

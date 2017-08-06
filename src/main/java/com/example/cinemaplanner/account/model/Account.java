@@ -5,9 +5,11 @@ package com.example.cinemaplanner.account.model;
  * Object account with column db
  */
 
+import com.example.cinemaplanner.group.model.GroupModel;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Setter
@@ -34,4 +36,7 @@ public class Account {
 
     @Column(name = "lastname")
     private String lastName;
+
+//    @Column(name = "groups")
+//    private List<GroupModel> groups;
 }
