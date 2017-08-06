@@ -41,7 +41,7 @@ public class TokenProvider {
      * @return String token
      */
     String getToken(Account account) {
-        return getToken(account, DateTime.now().plusDays(1).getMillis());
+        return getToken(account, DateTime.now().plusMinutes(15).getMillis());
     }
 
     /**
@@ -92,13 +92,13 @@ public class TokenProvider {
         byte[] expectedKeyBytes = expectedKey.getBytes();
         byte[] externalKeyBytes = externalKey.getBytes();
 
-        if(MessageDigest.isEqual(expectedKeyBytes, externalKeyBytes)){
-            if (!new DateTime(externalDate).isBeforeNow()){
+        if (MessageDigest.isEqual(expectedKeyBytes, externalKeyBytes)) {
+            if (!new DateTime(externalDate).isBeforeNow()) {
                 return true;
-            }else{
+            } else {
                 throw new TokenExpiredException();
             }
-        }else{
+        } else {
             return false;
         }
     }

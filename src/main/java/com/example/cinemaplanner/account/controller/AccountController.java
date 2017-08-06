@@ -4,10 +4,7 @@ import com.example.cinemaplanner.account.authentication.AuthenticatedRequestBody
 import com.example.cinemaplanner.account.authentication.AuthenticationManager;
 import com.example.cinemaplanner.account.authentication.ConnectionRequestBody;
 import com.example.cinemaplanner.account.authentication.Token;
-import com.example.cinemaplanner.account.exceptions.AccountNotFoundException;
-import com.example.cinemaplanner.account.exceptions.IncorrectCsvException;
-import com.example.cinemaplanner.account.exceptions.MustBeAuthenticatedAsAdminException;
-import com.example.cinemaplanner.account.exceptions.SamePasswordException;
+import com.example.cinemaplanner.account.exceptions.*;
 import com.example.cinemaplanner.account.model.*;
 import com.example.cinemaplanner.account.service.AccountService;
 import com.example.cinemaplanner.config.PasswordGenerator;
@@ -43,6 +40,30 @@ public class AccountController {
         this.accountService = accountService;
         this.emailService = emailService;
         this.authenticationManager = authenticationManager;
+    }
+
+    /**
+     * Create new account.
+     *
+     * @param body info user
+     * @return AccountPublic
+     */
+    @RequestMapping(value = "create", method = POST)
+    public AccountPublic createAccount(@RequestBody BodyAccount body) {
+        Account accountExist = accountService.findByEmail(body.getLogin());
+        if (accountExist == null) {
+            Account account = Account.builder()
+                    .login(body.getLogin())
+                    .password(body.getPassword())
+                    .firstName(body.getFirstName())
+                    .lastName(body.getLastName())
+                    .build();
+            accountService.saveAccount(account);
+            return new AccountPublic(account);
+        } else {
+            throw new AccountAlreadyExist();
+        }
+
     }
 
 
@@ -123,8 +144,6 @@ public class AccountController {
         accountService.saveAccount(account);
         return new AccountPublic(account);
     }
-
-
 
 
     /**
