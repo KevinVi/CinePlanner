@@ -1,14 +1,15 @@
 package com.example.cinemaplanner.group.controller;
 
 import com.example.cinemaplanner.account.authentication.AuthenticationManager;
+import com.example.cinemaplanner.account.exceptions.MustBeAuthenticatedException;
+import com.example.cinemaplanner.account.model.Account;
 import com.example.cinemaplanner.account.service.AccountService;
-import com.example.cinemaplanner.group.model.GroupPublic;
+import com.example.cinemaplanner.group.model.*;
 import com.example.cinemaplanner.group.repository.GroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -34,7 +35,98 @@ public class GroupController {
     }
 
     @RequestMapping(value = "create", method = POST)
-    public List<GroupPublic> getGroups() {
-        return null;
+    public GroupPublic createGroup(@RequestHeader(value = "token") String token, @RequestBody GroupCreate info) throws Exception {
+        authenticationManager.mustBeValidToken(token);
+        Account account = authenticationManager.getAccountFromToken(token);
+        if (info.getName().isEmpty()) {
+            throw new Exception("Can't be empty");
+        }
+        if (account != null) {
+            System.out.println(account.getGroup().toString());
+            for (GroupModel g :
+                    account.getGroup()) {
+                if (g.getName().equals(info.getName())) {
+                    if (g.getCreator().equals(account.getLogin())) {
+                        throw new Exception("You have a group with this name already");
+                    }
+                }
+            }
+            GroupModel groupModel = new GroupModel();
+            List<Account> accounts = new ArrayList<>();
+            accounts.add(account);
+            groupModel.setName(info.getName());
+            groupModel.setUsers(accounts);
+            groupModel.setCreator(account.getLogin());
+            groupModel.setPendingUsers(info.getUsers());
+
+            for (String user : info.getUsers()) {
+                Account guest = accountService.getAccountByLogin(user);
+                if (guest != null) {
+                    //send mail to notify invite using creator and name
+                } else {
+                    //send mail to create and invite using creator and name
+                }
+            }
+            groupRepository.save(groupModel);
+
+            return new GroupPublic(groupModel);
+        } else {
+            throw new MustBeAuthenticatedException();
+        }
+
     }
+
+    @RequestMapping(value = "leave", method = POST)
+    public boolean leaveGroup(@RequestHeader(value = "token") String token, @RequestBody GroupId id) {
+        authenticationManager.mustBeValidToken(token);
+        Account account = authenticationManager.getAccountFromToken(token);
+        if (account != null) {
+            for (GroupModel g :
+                    account.getGroup()) {
+                if (g.getId() == id.getId()) {
+                    g.getUsers().remove(account);
+                    return true;
+                }
+            }
+            return false;
+        } else {
+            throw new MustBeAuthenticatedException();
+        }
+    }
+
+    @RequestMapping(value = "groups", method = POST)
+    public List<GroupPublic> getGroups(@RequestHeader(value = "token") String token) {
+        authenticationManager.mustBeValidToken(token);
+        Account account = authenticationManager.getAccountFromToken(token);
+        if (account != null) {
+            List<GroupPublic> groupPublics = new ArrayList<>();
+            for (GroupModel g :
+                    account.getGroup()) {
+                groupPublics.add(new GroupPublic(g));
+            }
+            return groupPublics;
+        } else {
+            throw new MustBeAuthenticatedException();
+        }
+    }
+
+    @RequestMapping(value = "invite", method = POST)
+    public boolean inviteToGroup(@RequestHeader(value = "token") String token, @RequestBody GroupContent invite) {
+        authenticationManager.mustBeValidToken(token);
+        Account account = authenticationManager.getAccountFromToken(token);
+        if (account != null) {
+            Account guest = accountService.getAccountByLogin(invite.getString());
+            if (guest != null) {
+                //send mail to notify invite using creator and name
+                return true;
+            } else {
+                //send mail to create and invite using creator and name
+                return true;
+            }
+        } else {
+            throw new MustBeAuthenticatedException();
+        }
+    }
+
+
 }

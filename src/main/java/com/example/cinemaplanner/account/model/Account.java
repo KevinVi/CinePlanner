@@ -37,6 +37,7 @@ public class Account {
     @Column(name = "lastname")
     private String lastName;
 
-//    @Column(name = "groups")
-//    private List<GroupModel> groups;
+    @OneToMany
+    @Column(name = "group")
+    private List<GroupModel> group;
 }

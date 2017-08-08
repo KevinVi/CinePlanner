@@ -21,6 +21,6 @@ public class GroupPublic {
 
     public GroupPublic(GroupModel groupModel) {
         this.name = groupModel.getName();
-        //this.users = groupModel.getUsers();
+        this.users = groupModel.getUsers();
     }
 }

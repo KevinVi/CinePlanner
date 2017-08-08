@@ -27,6 +27,14 @@ public class GroupModel {
     @Column(name = "name")
     String name;
 
-//    @Column(name = "users")
-//    List<Account> users;
+    @Column(name = "creator")
+    String creator;
+
+    @OneToMany
+    @Column(name = "users")
+    List<Account> users;
+
+    @ElementCollection
+    @Column(name = "pendingUsers")
+    List<String> pendingUsers;
 }
