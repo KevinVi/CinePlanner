@@ -1,6 +1,6 @@
 package com.example.cinemaplanner.group.repository;
 
-import com.example.cinemaplanner.group.model.GroupModel;
+import com.example.cinemaplanner.group.model.Group;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public interface GroupRepository extends JpaRepository<GroupModel, String> {
+public interface GroupRepository extends JpaRepository<Group, String> {
 }

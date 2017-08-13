@@ -1,6 +1,5 @@
 package com.example.cinemaplanner.group.model;
 
-import com.example.cinemaplanner.account.model.Account;
 import lombok.*;
 
 import java.util.List;
@@ -17,10 +16,12 @@ import java.util.List;
 public class GroupPublic {
 
     String name;
-    List<Account> users;
+    String creator;
+    List<String> pendingUsers;
 
-    public GroupPublic(GroupModel groupModel) {
-        this.name = groupModel.getName();
-        this.users = groupModel.getUsers();
+    public GroupPublic(Group group) {
+        this.name = group.getName();
+        this.creator = group.getCreator();
+        this.pendingUsers = group.getPendingUsers();
     }
 }

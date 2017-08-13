@@ -5,7 +5,7 @@ package com.example.cinemaplanner.account.model;
  * Object account with column db
  */
 
-import com.example.cinemaplanner.group.model.GroupModel;
+import com.example.cinemaplanner.group.model.Group;
 import lombok.*;
 
 import javax.persistence.*;
@@ -39,5 +39,5 @@ public class Account {
 
     @OneToMany
     @Column(name = "group")
-    private List<GroupModel> group;
+    private List<Group> group;
 }

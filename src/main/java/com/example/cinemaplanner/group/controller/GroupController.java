@@ -43,7 +43,7 @@ public class GroupController {
         }
         if (account != null) {
             System.out.println(account.getGroup().toString());
-            for (GroupModel g :
+            for (Group g :
                     account.getGroup()) {
                 if (g.getName().equals(info.getName())) {
                     if (g.getCreator().equals(account.getLogin())) {
@@ -51,13 +51,10 @@ public class GroupController {
                     }
                 }
             }
-            GroupModel groupModel = new GroupModel();
-            List<Account> accounts = new ArrayList<>();
-            accounts.add(account);
-            groupModel.setName(info.getName());
-            groupModel.setUsers(accounts);
-            groupModel.setCreator(account.getLogin());
-            groupModel.setPendingUsers(info.getUsers());
+            Group group = new Group();
+            group.setName(info.getName());
+            group.setCreator(account.getLogin());
+            group.setPendingUsers(info.getUsers());
 
             for (String user : info.getUsers()) {
                 Account guest = accountService.getAccountByLogin(user);
@@ -67,9 +64,9 @@ public class GroupController {
                     //send mail to create and invite using creator and name
                 }
             }
-            groupRepository.save(groupModel);
+            groupRepository.save(group);
 
-            return new GroupPublic(groupModel);
+            return new GroupPublic(group);
         } else {
             throw new MustBeAuthenticatedException();
         }
@@ -81,10 +78,11 @@ public class GroupController {
         authenticationManager.mustBeValidToken(token);
         Account account = authenticationManager.getAccountFromToken(token);
         if (account != null) {
-            for (GroupModel g :
+            for (Group g :
                     account.getGroup()) {
                 if (g.getId() == id.getId()) {
-                    g.getUsers().remove(account);
+                    account.getGroup().remove(g);
+                    accountService.updateAccount(account);
                     return true;
                 }
             }
@@ -100,7 +98,7 @@ public class GroupController {
         Account account = authenticationManager.getAccountFromToken(token);
         if (account != null) {
             List<GroupPublic> groupPublics = new ArrayList<>();
-            for (GroupModel g :
+            for (Group g :
                     account.getGroup()) {
                 groupPublics.add(new GroupPublic(g));
             }

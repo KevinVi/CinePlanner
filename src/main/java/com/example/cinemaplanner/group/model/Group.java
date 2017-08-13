@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "GROUP")
-public class GroupModel {
+public class Group {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -29,10 +29,6 @@ public class GroupModel {
 
     @Column(name = "creator")
     String creator;
-
-    @OneToMany
-    @Column(name = "users")
-    List<Account> users;
 
     @ElementCollection
     @Column(name = "pendingUsers")
