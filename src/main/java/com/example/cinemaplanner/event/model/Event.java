@@ -4,6 +4,8 @@ import com.example.cinemaplanner.group.model.Group;
 import lombok.*;
 
 import javax.persistence.*;
+import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
  * Created by Kevin on 13/08/2017 for ZKY.
@@ -28,13 +30,11 @@ public class Event {
     @Column(name = "creator")
     String creator;
 
-    @Column(name = "start")
-    String start;
+    @Column(name = "datestart")
+    Timestamp  dtstart;
 
-    @Column(name = "end")
-    String end;
+    @Column(name = "dateend")
+    Timestamp dtend;
 
-    @OneToOne
-    @Column(name = "group")
-    Group group;
+
 }

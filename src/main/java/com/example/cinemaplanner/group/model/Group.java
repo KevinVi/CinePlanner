@@ -1,6 +1,7 @@
 package com.example.cinemaplanner.group.model;
 
 import com.example.cinemaplanner.account.model.Account;
+import com.example.cinemaplanner.event.model.Event;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "GROUP")
+@Table(name = "TEAM")
 public class Group {
 
     @Id
@@ -33,4 +34,8 @@ public class Group {
     @ElementCollection
     @Column(name = "pendingUsers")
     List<String> pendingUsers;
+
+    @OneToMany
+    @Column(name = "events")
+    List<Event> events;
 }

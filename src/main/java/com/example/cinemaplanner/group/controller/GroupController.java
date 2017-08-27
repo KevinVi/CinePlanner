@@ -42,9 +42,9 @@ public class GroupController {
             throw new Exception("Can't be empty");
         }
         if (account != null) {
-            System.out.println(account.getGroup().toString());
+            System.out.println(account.getTeams().toString());
             for (Group g :
-                    account.getGroup()) {
+                    account.getTeams()) {
                 if (g.getName().equals(info.getName())) {
                     if (g.getCreator().equals(account.getLogin())) {
                         throw new Exception("You have a group with this name already");
@@ -55,16 +55,21 @@ public class GroupController {
             group.setName(info.getName());
             group.setCreator(account.getLogin());
             group.setPendingUsers(info.getUsers());
+            account.getTeams().add(group);
 
-            for (String user : info.getUsers()) {
-                Account guest = accountService.getAccountByLogin(user);
-                if (guest != null) {
-                    //send mail to notify invite using creator and name
-                } else {
-                    //send mail to create and invite using creator and name
+            if (info.getUsers() != null) {
+                for (String user : info.getUsers()) {
+                    Account guest = accountService.getAccountByLogin(user);
+                    if (guest != null) {
+                        //send mail to notify invite using creator and name
+                    } else {
+                        //send mail to create and invite using creator and name
+                    }
                 }
             }
+            System.out.println(account.getPassword());
             groupRepository.save(group);
+            accountService.saveAccount(account);
 
             return new GroupPublic(group);
         } else {
@@ -79,9 +84,9 @@ public class GroupController {
         Account account = authenticationManager.getAccountFromToken(token);
         if (account != null) {
             for (Group g :
-                    account.getGroup()) {
+                    account.getTeams()) {
                 if (g.getId() == id.getId()) {
-                    account.getGroup().remove(g);
+                    account.getTeams().remove(g);
                     accountService.updateAccount(account);
                     return true;
                 }
@@ -99,7 +104,7 @@ public class GroupController {
         if (account != null) {
             List<GroupPublic> groupPublics = new ArrayList<>();
             for (Group g :
-                    account.getGroup()) {
+                    account.getTeams()) {
                 groupPublics.add(new GroupPublic(g));
             }
             return groupPublics;

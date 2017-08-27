@@ -38,6 +38,6 @@ public class Account {
     private String lastName;
 
     @OneToMany
-    @Column(name = "group")
-    private List<Group> group;
+    @Column(name = "teams")
+    private List<Group> teams;
 }
