@@ -15,7 +15,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 public class EventUpdate {
     String name;
-    Timestamp start;
-    Timestamp end;
+    long start;
+    long end;
     int id;
 }

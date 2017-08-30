@@ -1,6 +1,5 @@
-package com.example.cinemaplanner.group.model;
+package com.example.cinemaplanner.team.model;
 
-import com.example.cinemaplanner.account.model.Account;
 import com.example.cinemaplanner.event.model.Event;
 import lombok.*;
 
@@ -18,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "TEAM")
-public class Group {
+public class Team {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

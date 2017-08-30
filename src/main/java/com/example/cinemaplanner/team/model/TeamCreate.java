@@ -1,4 +1,4 @@
-package com.example.cinemaplanner.group.model;
+package com.example.cinemaplanner.team.model;
 
 import lombok.*;
 
@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class GroupCreate {
+public class TeamCreate {
 
     String name;
     List<String> users;

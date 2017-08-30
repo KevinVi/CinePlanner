@@ -1,11 +1,11 @@
-package com.example.cinemaplanner.group.controller;
+package com.example.cinemaplanner.team.controller;
 
 import com.example.cinemaplanner.account.authentication.AuthenticationManager;
 import com.example.cinemaplanner.account.exceptions.MustBeAuthenticatedException;
 import com.example.cinemaplanner.account.model.Account;
 import com.example.cinemaplanner.account.service.AccountService;
-import com.example.cinemaplanner.group.model.*;
-import com.example.cinemaplanner.group.repository.GroupRepository;
+import com.example.cinemaplanner.team.model.*;
+import com.example.cinemaplanner.team.repository.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,22 +20,22 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/group")
-public class GroupController {
-    private final GroupRepository groupRepository;
+@RequestMapping("/team")
+public class TeamController {
+    private final TeamRepository teamRepository;
     private final AccountService accountService;
     private final AuthenticationManager authenticationManager;
 
 
     @Autowired
-    public GroupController(GroupRepository groupRepository, AccountService accountService, AuthenticationManager authenticationManager) {
-        this.groupRepository = groupRepository;
+    public TeamController(TeamRepository teamRepository, AccountService accountService, AuthenticationManager authenticationManager) {
+        this.teamRepository = teamRepository;
         this.accountService = accountService;
         this.authenticationManager = authenticationManager;
     }
 
     @RequestMapping(value = "create", method = POST)
-    public GroupPublic createGroup(@RequestHeader(value = "token") String token, @RequestBody GroupCreate info) throws Exception {
+    public TeamPublic createTeam(@RequestHeader(value = "token") String token, @RequestBody TeamCreate info) throws Exception {
         authenticationManager.mustBeValidToken(token);
         Account account = authenticationManager.getAccountFromToken(token);
         if (info.getName().isEmpty()) {
@@ -43,19 +43,19 @@ public class GroupController {
         }
         if (account != null) {
             System.out.println(account.getTeams().toString());
-            for (Group g :
+            for (Team g :
                     account.getTeams()) {
                 if (g.getName().equals(info.getName())) {
                     if (g.getCreator().equals(account.getLogin())) {
-                        throw new Exception("You have a group with this name already");
+                        throw new Exception("You have a team with this name already");
                     }
                 }
             }
-            Group group = new Group();
-            group.setName(info.getName());
-            group.setCreator(account.getLogin());
-            group.setPendingUsers(info.getUsers());
-            account.getTeams().add(group);
+            Team team = new Team();
+            team.setName(info.getName());
+            team.setCreator(account.getLogin());
+            team.setPendingUsers(info.getUsers());
+            account.getTeams().add(team);
 
             if (info.getUsers() != null) {
                 for (String user : info.getUsers()) {
@@ -67,11 +67,10 @@ public class GroupController {
                     }
                 }
             }
-            System.out.println(account.getPassword());
-            groupRepository.save(group);
+            teamRepository.save(team);
             accountService.saveAccount(account);
 
-            return new GroupPublic(group);
+            return new TeamPublic(team);
         } else {
             throw new MustBeAuthenticatedException();
         }
@@ -79,15 +78,15 @@ public class GroupController {
     }
 
     @RequestMapping(value = "leave", method = POST)
-    public boolean leaveGroup(@RequestHeader(value = "token") String token, @RequestBody GroupId id) {
+    public boolean leaveTeam(@RequestHeader(value = "token") String token, @RequestBody TeamId id) {
         authenticationManager.mustBeValidToken(token);
         Account account = authenticationManager.getAccountFromToken(token);
         if (account != null) {
-            for (Group g :
+            for (Team g :
                     account.getTeams()) {
                 if (g.getId() == id.getId()) {
                     account.getTeams().remove(g);
-                    accountService.updateAccount(account);
+                    accountService.saveAccount(account);
                     return true;
                 }
             }
@@ -97,24 +96,24 @@ public class GroupController {
         }
     }
 
-    @RequestMapping(value = "groups", method = POST)
-    public List<GroupPublic> getGroups(@RequestHeader(value = "token") String token) {
+    @RequestMapping(value = "teams", method = POST)
+    public List<TeamPublic> getTeams(@RequestHeader(value = "token") String token) {
         authenticationManager.mustBeValidToken(token);
         Account account = authenticationManager.getAccountFromToken(token);
         if (account != null) {
-            List<GroupPublic> groupPublics = new ArrayList<>();
-            for (Group g :
+            List<TeamPublic> teamPublics = new ArrayList<>();
+            for (Team g :
                     account.getTeams()) {
-                groupPublics.add(new GroupPublic(g));
+                teamPublics.add(new TeamPublic(g));
             }
-            return groupPublics;
+            return teamPublics;
         } else {
             throw new MustBeAuthenticatedException();
         }
     }
 
     @RequestMapping(value = "invite", method = POST)
-    public boolean inviteToGroup(@RequestHeader(value = "token") String token, @RequestBody GroupContent invite) {
+    public boolean inviteToTeam(@RequestHeader(value = "token") String token, @RequestBody TeamContent invite) {
         authenticationManager.mustBeValidToken(token);
         Account account = authenticationManager.getAccountFromToken(token);
         if (account != null) {

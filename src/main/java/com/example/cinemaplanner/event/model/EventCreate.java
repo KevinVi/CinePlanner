@@ -1,6 +1,5 @@
 package com.example.cinemaplanner.event.model;
 
-import com.example.cinemaplanner.group.model.GroupPublic;
 import lombok.*;
 
 /**
@@ -14,7 +13,7 @@ import lombok.*;
 public class EventCreate {
 
     String name;
-    String start;
-    String end;
-    int idGroup;
+    long start;
+    long end;
+    int idTeam;
 }
