@@ -41,6 +41,43 @@ public class MailService {
         }
     }
 
+    public void addToTeam(String to, String text) {
+        try {
+
+            MimeMessagePreparator messagePreparator = mimeMessage -> {
+                MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
+                messageHelper.setTo(to);
+                messageHelper.setSubject("New Team Cinecplanner");
+                String content = mailContentBuilder.buildAddToTeam(text);
+                messageHelper.setText(content, true);
+            };
+
+            mailSender.send(messagePreparator);
+        } catch (MailException e) {
+            e.printStackTrace();
+            // runtime exception; compiler will not force you to handle it
+        }
+    }
+
+
+    public void addToTeamNewAccount(String to, String text) {
+        try {
+
+            MimeMessagePreparator messagePreparator = mimeMessage -> {
+                MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
+                messageHelper.setTo(to);
+                messageHelper.setSubject("Join Cinecplanner ! ");
+                String content = mailContentBuilder.buildAddToTeamNewAccount(text);
+                messageHelper.setText(content, true);
+            };
+
+            mailSender.send(messagePreparator);
+        } catch (MailException e) {
+            e.printStackTrace();
+            // runtime exception; compiler will not force you to handle it
+        }
+    }
+
     public void restorePasswordSend(String to, String text) {
         try {
 
@@ -58,6 +95,7 @@ public class MailService {
             // runtime exception; compiler will not force you to handle it
         }
     }
+
     public void accountCreated(String to, String login, String password) {
         try {
 

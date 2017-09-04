@@ -4,6 +4,7 @@ import com.example.cinemaplanner.account.authentication.AuthenticationManager;
 import com.example.cinemaplanner.account.exceptions.MustBeAuthenticatedException;
 import com.example.cinemaplanner.account.model.Account;
 import com.example.cinemaplanner.account.service.AccountService;
+import com.example.cinemaplanner.mail.MailService;
 import com.example.cinemaplanner.team.model.*;
 import com.example.cinemaplanner.team.repository.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +25,15 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class TeamController {
     private final TeamRepository teamRepository;
     private final AccountService accountService;
+    private final MailService emailService;
     private final AuthenticationManager authenticationManager;
 
 
     @Autowired
-    public TeamController(TeamRepository teamRepository, AccountService accountService, AuthenticationManager authenticationManager) {
+    public TeamController(TeamRepository teamRepository, AccountService accountService, MailService emailService, AuthenticationManager authenticationManager) {
         this.teamRepository = teamRepository;
         this.accountService = accountService;
+        this.emailService = emailService;
         this.authenticationManager = authenticationManager;
     }
 
@@ -61,8 +64,9 @@ public class TeamController {
                 for (String user : info.getUsers()) {
                     Account guest = accountService.getAccountByLogin(user);
                     if (guest != null) {
-                        //send mail to notify invite using creator and name
+                        emailService.addToTeam(guest.getLogin(), "localhost:8080/");
                     } else {
+                        emailService.addToTeamNewAccount(user, "localhost:8080/");
                         //send mail to create and invite using creator and name
                     }
                 }
@@ -130,5 +134,42 @@ public class TeamController {
         }
     }
 
+    @RequestMapping(value = "pending", method = POST)
+    public List<TeamPublic> pendingTeams(@RequestHeader(value = "token") String token) {
+        authenticationManager.mustBeValidToken(token);
+        Account account = authenticationManager.getAccountFromToken(token);
+        if (account != null) {
+            List<Team> teams = teamRepository.findByLogin(account.getLogin());
+            List<TeamPublic> teamPublics = new ArrayList<>();
+            for (Team t :
+                    teams) {
+                teamPublics.add(new TeamPublic(t));
+            }
+            return teamPublics;
+        } else {
+            throw new MustBeAuthenticatedException();
+        }
+    }
+
+
+    @RequestMapping(value = "join", method = POST)
+    public boolean pendingTeams(@RequestHeader(value = "token") String token, @RequestBody TeamId id) throws Exception {
+        authenticationManager.mustBeValidToken(token);
+        Account account = authenticationManager.getAccountFromToken(token);
+        if (account != null) {
+            Team team = teamRepository.findById(id.getId());
+            if (team.getPendingUsers().contains(account.getLogin())) {
+                team.getPendingUsers().remove(account.getLogin());
+            } else {
+                throw new Exception("you are not in this team");
+            }
+            account.getTeams().add(team);
+            teamRepository.save(team);
+            accountService.saveAccount(account);
+            return true;
+        } else {
+            throw new MustBeAuthenticatedException();
+        }
+    }
 
 }

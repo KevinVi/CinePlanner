@@ -9,6 +9,7 @@ import com.example.cinemaplanner.team.model.Team;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Getter
@@ -18,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "ACCOUNT")
-public class Account {
+public class Account implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -30,6 +30,7 @@ public class DataLoader implements ApplicationRunner {
         if (accountService.getAccounts().isEmpty()) {
             Account account = Account.builder().id(0).login("kevin.vivor@gmail.com").password("cXNH44GxgG").firstName("kevin").lastName("vivor").build();
             accountService.updateAccount(account);
+
         }
     }
 }

@@ -16,12 +16,14 @@ import java.util.List;
 @NoArgsConstructor
 public class TeamPublic {
 
+    int id;
     String name;
     String creator;
     List<String> pendingUsers;
     List<Event> events;
 
     public TeamPublic(Team team) {
+        this.id = team.getId();
         this.name = team.getName();
         this.creator = team.getCreator();
         this.pendingUsers = team.getPendingUsers();

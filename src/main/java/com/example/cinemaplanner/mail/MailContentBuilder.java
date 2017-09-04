@@ -33,6 +33,30 @@ public class MailContentBuilder {
     }
 
     /**
+     * Template add to team
+     *
+     * @param message link to restore
+     * @return String template
+     */
+    String buildAddToTeam(String message) {
+        Context context = new Context();
+        context.setVariable("message", message);
+        return templateEngine.process("mail-add-to-team", context);
+    }
+
+    /**
+     * Template add to team
+     *
+     * @param message link to restore
+     * @return String template
+     */
+    String buildAddToTeamNewAccount(String message) {
+        Context context = new Context();
+        context.setVariable("message", message);
+        return templateEngine.process("mail-add-to-team-new-account", context);
+    }
+
+    /**
      * Template restore password restored
      *
      * @param message new password
