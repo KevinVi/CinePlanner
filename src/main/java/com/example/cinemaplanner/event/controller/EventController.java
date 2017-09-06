@@ -99,8 +99,10 @@ public class EventController {
                 eventRepository.save(event);
                 return new EventPublic(event);
             }
+            return new EventPublic();
+        } else {
+            throw new AccountNotFoundException();
         }
-        return new EventPublic();
     }
 
 }
