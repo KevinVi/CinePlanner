@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -59,6 +60,8 @@ public class EventController {
                         event.setDtend(info.getEnd());
                         event.setDtstart(info.getStart());
                         event.setCreator(account.getFirstName());
+                        event.setPostComment(new ArrayList<>());
+                        event.setPreComment(new ArrayList<>());
                         eventRepository.save(event);
                         List<Event> events = team.getEvents();
                         events.add(event);

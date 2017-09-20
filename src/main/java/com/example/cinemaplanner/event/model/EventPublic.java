@@ -30,6 +30,7 @@ public class EventPublic {
         this.start = event.getDtstart();
         this.end = event.getDtend();
         List<CommentPublic> commentPublics = new ArrayList<>();
+
         for (Comment c :
                 event.getPreComment()) {
             commentPublics.add(new CommentPublic(c));
