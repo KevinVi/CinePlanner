@@ -17,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 public class EventPublic {
 
+    long id;
     String name;
     String creator;
     long start;
@@ -25,6 +26,7 @@ public class EventPublic {
     List<CommentPublic> postComments;
 
     public EventPublic(Event event) {
+        this.id = event.getId();
         this.name = event.getName();
         this.creator = event.getCreator();
         this.start = event.getDtstart();
