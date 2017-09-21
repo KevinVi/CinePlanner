@@ -1,8 +1,10 @@
 package com.example.cinemaplanner.team.model;
 
 import com.example.cinemaplanner.event.model.Event;
+import com.example.cinemaplanner.event.model.EventPublic;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,13 +22,18 @@ public class TeamPublic {
     String name;
     String creator;
     List<String> pendingUsers;
-    List<Event> events;
+    List<EventPublic> events;
 
     public TeamPublic(Team team) {
         this.id = team.getId();
         this.name = team.getName();
         this.creator = team.getCreator();
         this.pendingUsers = team.getPendingUsers();
-        this.events = team.getEvents();
+        List<EventPublic> eventPublics = new ArrayList<>();
+        for (Event ev :
+                team.getEvents()) {
+            eventPublics.add(new EventPublic(ev));
+        }
+        this.events = eventPublics;
     }
 }
