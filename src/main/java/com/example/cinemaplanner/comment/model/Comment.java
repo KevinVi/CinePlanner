@@ -13,7 +13,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "Event")
+@Table(name = "COMMENT")
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
