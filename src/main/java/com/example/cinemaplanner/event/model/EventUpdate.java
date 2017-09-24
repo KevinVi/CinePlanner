@@ -18,4 +18,5 @@ public class EventUpdate {
     long start;
     long end;
     int id;
+    int idMovie;
 }

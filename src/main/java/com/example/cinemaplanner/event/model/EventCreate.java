@@ -16,4 +16,6 @@ public class EventCreate {
     long start;
     long end;
     int idTeam;
+    int idMovie;
+
 }

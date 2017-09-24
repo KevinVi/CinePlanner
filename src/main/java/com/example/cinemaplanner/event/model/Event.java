@@ -42,4 +42,8 @@ public class Event {
     @OneToMany
     @Column(name = "postcomments")
     List<Comment> postComment;
+
+    @Column(name = "description")
+    JsonSearchResult description;
+
 }

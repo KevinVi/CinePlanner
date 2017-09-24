@@ -24,6 +24,7 @@ public class EventPublic {
     long end;
     List<CommentPublic> preComments;
     List<CommentPublic> postComments;
+    JsonSearchResult description;
 
     public EventPublic(Event event) {
         this.id = event.getId();
@@ -44,5 +45,6 @@ public class EventPublic {
             commentPublics.add(new CommentPublic(c));
         }
         this.postComments = commentPublics;
+        this.description = event.getDescription();
     }
 }
