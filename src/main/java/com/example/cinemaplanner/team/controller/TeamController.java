@@ -57,7 +57,9 @@ public class TeamController {
             Team team = new Team();
             team.setName(info.getName());
             team.setCreator(account.getLogin());
-            team.setPendingUsers(info.getUsers());
+            if (info.getUsers()!=null) {
+                team.setPendingUsers(info.getUsers());
+            }
             account.getTeams().add(team);
 
             if (info.getUsers() != null) {

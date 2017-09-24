@@ -28,7 +28,9 @@ public class TeamPublic {
         this.id = team.getId();
         this.name = team.getName();
         this.creator = team.getCreator();
-        this.pendingUsers = team.getPendingUsers();
+        if (team.getPendingUsers()!=null) {
+            this.pendingUsers = team.getPendingUsers();
+        }
         List<EventPublic> eventPublics = new ArrayList<>();
         for (Event ev :
                 team.getEvents()) {
