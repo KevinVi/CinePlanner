@@ -76,6 +76,7 @@ public class TeamController {
             teamRepository.save(team);
             accountService.saveAccount(account);
 
+            System.out.println(team);
             return new TeamPublic(team);
         } else {
             throw new MustBeAuthenticatedException();

@@ -54,8 +54,10 @@ public class EventController {
             throw new Exception("Wrong parameters");
         } else {
             if (account != null) {
+                System.out.println("coucou");
                 for (Team team :
                         account.getTeams()) {
+                    System.out.println("coucou2");
                     if (team.getId() == info.getIdTeam()) {
                         Event event = new Event();
                         event.setName(info.getName());
@@ -138,7 +140,7 @@ public class EventController {
                     searchPage.getResults()) {
                 res.setBackdrop_path(imageUrl.getImages().getUrl() + "original" + res.getBackdrop_path());
                 res.setPoster_path(imageUrl.getImages().getUrl() + "original" + res.getPoster_path());
-                searchRepository.save(res);
+                searchRepository.save(new Movie(res));
             }
 
 

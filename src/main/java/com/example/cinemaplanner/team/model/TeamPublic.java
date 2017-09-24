@@ -28,14 +28,20 @@ public class TeamPublic {
         this.id = team.getId();
         this.name = team.getName();
         this.creator = team.getCreator();
-        if (team.getPendingUsers()!=null) {
+        if (team.getPendingUsers() != null) {
             this.pendingUsers = team.getPendingUsers();
+        } else {
+            this.pendingUsers = new ArrayList<>();
         }
         List<EventPublic> eventPublics = new ArrayList<>();
-        for (Event ev :
-                team.getEvents()) {
-            eventPublics.add(new EventPublic(ev));
+        if (team.getEvents() != null) {
+            for (Event ev :
+                    team.getEvents()) {
+                eventPublics.add(new EventPublic(ev));
+            }
+            this.events = eventPublics;
+        } else {
+            this.events = new ArrayList<>();
         }
-        this.events = eventPublics;
     }
 }

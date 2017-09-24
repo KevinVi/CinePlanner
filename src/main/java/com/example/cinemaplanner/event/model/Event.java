@@ -43,7 +43,8 @@ public class Event {
     @Column(name = "postcomments")
     List<Comment> postComment;
 
-    @Column(name = "description")
-    JsonSearchResult description;
+    @OneToOne
+    @JoinColumn(name = "description")
+    Movie description;
 
 }
