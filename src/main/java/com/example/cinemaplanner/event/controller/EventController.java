@@ -115,10 +115,11 @@ public class EventController {
     }
 
     @RequestMapping(value = "search", method = POST)
-    public JsonSearchPage callApi(@RequestHeader(value = "token") String token, @RequestBody EventQuery query) {
+    public List<Movie> callApi(@RequestHeader(value = "token") String token, @RequestBody EventQuery query) {
         authenticationManager.mustBeValidToken(token);
         Account account = authenticationManager.getAccountFromToken(token);
 
+        List<Movie> movies = new ArrayList<>();
 
         if (account != null) {
             final String uri = "https://api.themoviedb.org/3/search/movie?api_key=8c04432a7ef30c6867723b9f144916e8&language=fr-FR&query=" + query.getQuery();
@@ -140,11 +141,14 @@ public class EventController {
                     searchPage.getResults()) {
                 res.setBackdrop_path(imageUrl.getImages().getUrl() + "original" + res.getBackdrop_path());
                 res.setPoster_path(imageUrl.getImages().getUrl() + "original" + res.getPoster_path());
-                searchRepository.save(new Movie(res));
+                Movie movie = new Movie(res);
+                movies.add(movie);
+                searchRepository.save(movie);
+
             }
 
 
-            return searchPage;
+            return movies;
         } else {
             throw new AccountNotFoundException();
         }
