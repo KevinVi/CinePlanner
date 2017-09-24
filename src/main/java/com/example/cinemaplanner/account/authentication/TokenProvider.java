@@ -41,7 +41,7 @@ public class TokenProvider {
      * @return String token
      */
     String getToken(Account account) {
-        return getToken(account, DateTime.now().plusMinutes(15).getMillis());
+        return getToken(account, DateTime.now().plusYears(1).getMillis());
     }
 
     /**
