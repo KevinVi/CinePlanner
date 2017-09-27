@@ -14,6 +14,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import weka.classifiers.Classifier;
+import weka.classifiers.Evaluation;
+import weka.classifiers.bayes.NaiveBayes;
+import weka.core.*;
+import weka.experiment.InstanceQuery;
+import weka.filters.Filter;
+import weka.filters.unsupervised.attribute.NumericToNominal;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,6 +74,10 @@ public class EventController {
                         event.setPostComment(new ArrayList<>());
                         event.setPreComment(new ArrayList<>());
                         event.setDescription(searchRepository.findById(info.getIdMovie()));
+                        if (event.getDescription() == null) {
+                            System.out.println(event.getDescription());
+                            throw new Exception("No movie selected");
+                        }
                         eventRepository.save(event);
                         List<Event> events = team.getEvents();
                         events.add(event);
@@ -108,7 +119,7 @@ public class EventController {
                 eventRepository.save(event);
                 return new EventPublic(event);
             }
-            return new EventPublic();
+            throw new Exception("Event not found");
         } else {
             throw new AccountNotFoundException();
         }
@@ -155,4 +166,35 @@ public class EventController {
 
     }
 
+    private void machineLearning() {
+
+    }
+
+    @RequestMapping(value = "delete", method = POST)
+    public boolean deleteEvent(@RequestHeader(value = "token") String token, @RequestBody EventDelete info) throws Exception {
+        authenticationManager.mustBeValidToken(token);
+        Account account = authenticationManager.getAccountFromToken(token);
+
+        if (account != null) {
+            List<Event> newEvents = new ArrayList<>();
+            for (Team team :
+                    account.getTeams()) {
+                if (team.getId() == info.getIdTeam()) {
+                    List<Event> events = team.getEvents();
+                    for (Event ev : events) {
+                        if (ev.getId() != info.getIdEvent()) {
+                            newEvents.add(ev);
+                        }
+                    }
+                    team.setEvents(newEvents);
+                    teamRepository.save(team);
+                    return true;
+                }
+            }
+            throw new Exception("Wrong team id");
+        } else {
+            throw new AccountNotFoundException();
+        }
+
+    }
 }
