@@ -1,117 +1,15 @@
 package com.example.cinemaplanner;
 
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.List;
-
-import weka.classifiers.Classifier;
-import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.NaiveBayes;
-import weka.classifiers.evaluation.NominalPrediction;
-import weka.classifiers.rules.DecisionTable;
-import weka.classifiers.rules.OneR;
-import weka.classifiers.rules.PART;
-import weka.classifiers.trees.DecisionStump;
-import weka.classifiers.trees.J48;
 import weka.core.*;
 import weka.core.converters.ConverterUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class WekaTest {
-    //    public static BufferedReader readDataFile(String filename) {
-//        BufferedReader inputReader = null;
-//
-//        try {
-//            FileReader fileReader = new FileReader(filename);
-//            inputReader = new BufferedReader(fileReader);
-//        } catch (FileNotFoundException ex) {
-//            System.err.println("File not found: " + filename);
-//        }
-//
-//        return inputReader;
-//    }
-//
-//    public static Evaluation simpleClassify(Classifier model, Instances trainingSet, Instances testingSet) throws Exception {
-//        Evaluation validation = new Evaluation(trainingSet);
-//
-//        model.buildClassifier(trainingSet);
-//        validation.evaluateModel(model, testingSet);
-//
-//        return validation;
-//    }
-//
-//    public static double calculateAccuracy(FastVector predictions) {
-//        double correct = 0;
-//
-//        for (int i = 0; i < predictions.size(); i++) {
-//            NominalPrediction np = (NominalPrediction) predictions.elementAt(i);
-//            if (np.predicted() == np.actual()) {
-//                correct++;
-//            }
-//        }
-//
-//        return 100 * correct / predictions.size();
-//    }
-//
-//    public static Instances[][] crossValidationSplit(Instances data, int numberOfFolds) {
-//        Instances[][] split = new Instances[2][numberOfFolds];
-//
-//        for (int i = 0; i < numberOfFolds; i++) {
-//            split[0][i] = data.trainCV(numberOfFolds, i);
-//            split[1][i] = data.testCV(numberOfFolds, i);
-//        }
-//
-//        return split;
-//    }
-//
-//    public static void main(String[] args) throws Exception {
-//        // I've commented the code as best I can, at the moment.
-//        // Comments are denoted by "//" at the beginning of the line.
-//
-//        BufferedReader datafile = readDataFile("G:\\iris.arff");
-//
-//        Instances data = new Instances(datafile);
-//        data.setClassIndex(data.numAttributes() - 1);
-//
-//        // Choose a type of validation split
-//        Instances[][] split = crossValidationSplit(data, 10);
-//
-//        // Separate split into training and testing arrays
-//        Instances[] trainingSplits = split[0];
-//        Instances[] testingSplits  = split[1];
-//
-//        // Choose a set of classifiers
-//        Classifier[] models = {     new J48(),
-//                new PART(),
-//                new DecisionTable(),
-//                new OneR(),
-//                new DecisionStump() };
-//
-//        // Run for each classifier model
-//        for(int j = 0; j < models.length; j++) {
-//
-//            // Collect every group of predictions for current model in a FastVector
-//            FastVector predictions = new FastVector();
-//
-//            // For each training-testing split pair, train and test the classifier
-//            for(int i = 0; i < trainingSplits.length; i++) {
-//                Evaluation validation = simpleClassify(models[j], trainingSplits[i], testingSplits[i]);
-//                predictions.appendElements(validation.predictions());
-//
-//                // Uncomment to see the summary for each training-testing pair.
-//                // System.out.println(models[j].toString());
-//            }
-//
-//            // Calculate overall accuracy of current classifier on all splits
-//            double accuracy = calculateAccuracy(predictions);
-//
-//            // Print current classifier's name and accuracy in a complicated, but nice-looking way.
-//            System.out.println(models[j].getClass().getSimpleName() + ": " + String.format("%.2f%%", accuracy) + "\n=====================");
-//        }
-//
-//    }
+
     public static void main(String[] args) throws Exception {
 
         ConverterUtils.DataSource source1 = new ConverterUtils.DataSource("G:\\weather.arff");
@@ -128,8 +26,8 @@ public class WekaTest {
         // setting class attribute if the data format does not provide this information
         // For example, the XRFF format saves the class attribute information as well
         if (train.classIndex() == -1) {
-            System.out.println("Remove one");
             train.setClassIndex(train.numAttributes() - 1);
+            System.out.println("Remove one" + train.classIndex());
         }
 
         ConverterUtils.DataSource source2 = new ConverterUtils.DataSource("G:\\test.arff");
@@ -161,12 +59,6 @@ public class WekaTest {
                     + " : " + test.instance(i).toString(4)
                     + " : " + Double.toString(predictionDistribution[0]));
         }
-
-
-
-
-
-
 
 
         // Declare outlook
@@ -244,7 +136,7 @@ public class WekaTest {
         humidityValue.add(80);
         humidityValue.add(70);
         humidityValue.add(65);
-        humidityValue.add(65);
+        humidityValue.add(60);
         humidityValue.add(95);
         humidityValue.add(70);
         humidityValue.add(80);
@@ -253,22 +145,25 @@ public class WekaTest {
         humidityValue.add(75);
         humidityValue.add(91);
 
+
+        int FALSE = 0;
+        int TRUE = 0;
         List<Integer> windyValue = new ArrayList<>();
-        windyValue.add(0);
-        windyValue.add(1);
-        windyValue.add(0);
-        windyValue.add(0);
-        windyValue.add(0);
-        windyValue.add(1);
-        windyValue.add(1);
-        windyValue.add(1);
-        windyValue.add(0);
-        windyValue.add(0);
-        windyValue.add(0);
-        windyValue.add(1);
-        windyValue.add(1);
-        windyValue.add(0);
-        windyValue.add(1);
+        windyValue.add(FALSE);
+        windyValue.add(TRUE);
+        windyValue.add(FALSE);
+        windyValue.add(FALSE);
+        windyValue.add(FALSE);
+        windyValue.add(TRUE);
+        windyValue.add(TRUE);
+        windyValue.add(TRUE);
+        windyValue.add(FALSE);
+        windyValue.add(FALSE);
+        windyValue.add(FALSE);
+        windyValue.add(TRUE);
+        windyValue.add(TRUE);
+        windyValue.add(FALSE);
+        windyValue.add(TRUE);
 
         List<String> result = new ArrayList<>();
         result.add("no");
@@ -290,11 +185,11 @@ public class WekaTest {
 
         Instances isTrainingSet = new Instances("Rel", atts, 10);
         isTrainingSet.setClassIndex(4);
-        System.out.println("outlookvalue ->" + outlookValue);
-        System.out.println("temperatureValue ->" + temperatureValue);
-        System.out.println("humidityValue ->" + humidityValue);
-        System.out.println("windyValue ->" + windyValue);
-        System.out.println("result ->" + result);
+//        System.out.println("outlookvalue ->" + outlookValue);
+//        System.out.println("temperatureValue ->" + temperatureValue);
+//        System.out.println("humidityValue ->" + humidityValue);
+//        System.out.println("windyValue ->" + windyValue);
+//        System.out.println("result ->" + result);
         for (int i = 0; i < result.size(); i++) {
             Instance iExample = new DenseInstance(5);
             iExample.setValue(atts.get(0), outlookValue.get(i));
@@ -302,53 +197,43 @@ public class WekaTest {
             iExample.setValue(atts.get(2), humidityValue.get(i));
             iExample.setValue(atts.get(3), windyValue.get(i));
             iExample.setValue(atts.get(4), result.get(i));
-            isTrainingSet.add(Utils.missingValue());
+            isTrainingSet.add(iExample);
         }
 
         Instances testSet = new Instances("test", atts, 10);
+        isTrainingSet.setClassIndex(4);
         for (int i = 0; i < result.size(); i++) {
             Instance iExample = new DenseInstance(5);
             iExample.setValue(atts.get(0), outlookValue.get(i));
             iExample.setValue(atts.get(1), temperatureValue.get(i));
             iExample.setValue(atts.get(2), humidityValue.get(i));
             iExample.setValue(atts.get(3), windyValue.get(i));
-            iExample.setMissing(i);
+            iExample.setValue(atts.get(4), Utils.missingValue());
             testSet.add(iExample);
         }
+
+        testSet.setClassIndex(testSet.numAttributes() - 1);
+
 
         NaiveBayes naiveBayesbis = new NaiveBayes();
         naiveBayesbis.buildClassifier(isTrainingSet);
 
-        System.out.println("testSEt size ->" + testSet);
+        System.out.println("");
+        System.out.println("");
+        System.out.println("");
         for (int i = 0; i < testSet.size(); i++) {
-            System.out.println("testSEt instance ->" + testSet.instance(i));
 
-            double label = naiveBayesbis.classifyInstance(testSet.instance(0));
-            double[] predictionDistribution = naiveBayesbis.distributionForInstance(testSet.instance(0));
+            double label = naiveBayesbis.classifyInstance(testSet.instance(i));
+            double[] predictionDistribution = naiveBayesbis.distributionForInstance(testSet.instance(i));
             testSet.instance(i).setClassValue(label);
             System.out.println(testSet.get(i).toString(0)
                     + " : " + testSet.get(i).toString(1)
                     + " : " + testSet.get(i).toString(2)
                     + " : " + testSet.get(i).toString(3)
-                    + " : " + testSet.instance(0).toString(4)
+                    + " : " + testSet.instance(i).toString(4)
                     + " : " + Double.toString(predictionDistribution[0]));
         }
 
-//        //build a J48 decision tree
-//        J48 model = new J48();
-//        model.buildClassifier(test);
-//
-//        //decide which instance you want to predict
-//        int s1 = 2;
-//
-//        //get the predicted probabilities
-//        double[] prediction = model.distributionForInstance(test.get(s1));
-//        //output predictions
-//        for (int i = 0; i < prediction.length; i = i + 1) {
-//            System.out.println("Probability of class " +
-//                    test.classAttribute().value(i) +
-//                    " : " + Double.toString(prediction[i]));
-//        }
     }
 
 

@@ -2,10 +2,9 @@ package com.example.cinemaplanner.event.model;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Kevin on 24/09/2017 for ZKY.
@@ -43,14 +42,18 @@ public class Movie {
     @Column(name = "original_title")
     String original_title;
 
-    @Column(name = "backdrop_path" )
+    @Column(name = "backdrop_path")
     String backdrop_path;
 
-    @Column(name = "overview",length = 3000)
+    @Column(name = "overview", length = 3000)
     String overview;
 
     @Column(name = "release_date")
     String release_date;
+
+    @ElementCollection
+    @Column(name = "gender")
+    List<Integer> genre_ids;
 
     public Movie(JsonSearchResult result) {
         this.id = result.getId();
@@ -64,5 +67,11 @@ public class Movie {
         this.backdrop_path = result.getBackdrop_path();
         this.overview = result.getOverview();
         this.release_date = result.getRelease_date();
+        List<Integer> genre = new ArrayList<>();
+        for (JsonSearchGenre js :
+                result.getGenre_ids()) {
+            genre.add(js.getGenreId());
+        }
+        this.genre_ids = genre;
     }
 }
