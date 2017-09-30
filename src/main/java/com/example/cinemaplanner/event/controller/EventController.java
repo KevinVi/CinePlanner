@@ -6,6 +6,8 @@ import com.example.cinemaplanner.account.model.Account;
 import com.example.cinemaplanner.account.service.AccountService;
 import com.example.cinemaplanner.event.model.*;
 import com.example.cinemaplanner.event.repository.EventRepository;
+import com.example.cinemaplanner.event.repository.GenreRepository;
+import com.example.cinemaplanner.event.repository.LearningRepository;
 import com.example.cinemaplanner.event.repository.SearchRepository;
 import com.example.cinemaplanner.team.model.Team;
 import com.example.cinemaplanner.team.repository.TeamRepository;
@@ -14,16 +16,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import weka.classifiers.Classifier;
-import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.NaiveBayes;
 import weka.core.*;
-import weka.experiment.InstanceQuery;
-import weka.filters.Filter;
-import weka.filters.unsupervised.attribute.NumericToNominal;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -41,17 +39,21 @@ public class EventController {
     private final AccountService accountService;
     private final EventRepository eventRepository;
     private final SearchRepository searchRepository;
+    private final LearningRepository learningRepository;
     private final AuthenticationManager authenticationManager;
+    private final GenreRepository genreRepository;
     private final long minDate = 1400000000000L;
 
 
     @Autowired
-    public EventController(TeamRepository teamRepository, AccountService accountService, EventRepository eventRepository, SearchRepository searchRepository, AuthenticationManager authenticationManager) {
+    public EventController(TeamRepository teamRepository, AccountService accountService, EventRepository eventRepository, SearchRepository searchRepository, LearningRepository learningRepository, AuthenticationManager authenticationManager, GenreRepository genreRepository) {
         this.teamRepository = teamRepository;
         this.accountService = accountService;
         this.eventRepository = eventRepository;
         this.searchRepository = searchRepository;
+        this.learningRepository = learningRepository;
         this.authenticationManager = authenticationManager;
+        this.genreRepository = genreRepository;
     }
 
     @RequestMapping(value = "create", method = POST)
@@ -135,8 +137,8 @@ public class EventController {
 
         if (account != null) {
             final String uri = "https://api.themoviedb.org/3/search/movie?api_key=8c04432a7ef30c6867723b9f144916e8&language=fr-FR&query=" + query.getQuery();
-            final String config = "https://api.themoviedb.org/3/configuration?api_key=8c04432a7ef30c6867723b9f144916e8";
 
+            String link = "https://image.tmdb.org/t/p/w500";
             System.out.println(query.getQuery());
             System.out.println(uri);
             RestTemplate restTemplate = new RestTemplate();
@@ -146,13 +148,12 @@ public class EventController {
 
 
             JsonSearchPage searchPage = restTemplate.getForObject(uri, JsonSearchPage.class);
-            JsonConfiguration imageUrl = restTemplate.getForObject(config, JsonConfiguration.class);
 
 
             for (JsonSearchResult res :
                     searchPage.getResults()) {
-                res.setBackdrop_path(imageUrl.getImages().getUrl() + "w500" + res.getBackdrop_path());
-                res.setPoster_path(imageUrl.getImages().getUrl() + "w500" + res.getPoster_path());
+                res.setBackdrop_path(link + res.getBackdrop_path());
+                res.setPoster_path(link + res.getPoster_path());
                 Movie movie = new Movie(res);
                 movies.add(movie);
                 searchRepository.save(movie);
@@ -166,9 +167,10 @@ public class EventController {
         }
 
     }
+
     @RequestMapping(value = "movies", method = GET)
     public List<Movie> machineLearning() {
-          return searchRepository.findAll();
+        return searchRepository.findAll();
     }
 
     @RequestMapping(value = "delete", method = POST)
@@ -199,569 +201,170 @@ public class EventController {
 
     }
 
-    private void test() {
-//        //declare
-//        Attribute genre1 = new Attribute("genre1");
-//
-//        //declare
-//        Attribute genre2 = new Attribute("genre");
-//
-//
-//        //declare
-//        Attribute genre3 = new Attribute("genre1");
-//
-//
-//        List<Integer> genreNumero1 = new ArrayList<>();
-//        genreNumero1.add(12);
-//        genreNumero1.add(28);
-//        genreNumero1.add(18);
-//        genreNumero1.add(28);
-//        genreNumero1.add(35);
-//        genreNumero1.add(878);
-//        genreNumero1.add(35);
-//        genreNumero1.add(99);
-//        genreNumero1.add(878);
-//        genreNumero1.add(18);
-//        genreNumero1.add(53);
-//        genreNumero1.add(18);
-//        genreNumero1.add(35);
-//        genreNumero1.add(18);
-//        genreNumero1.add(10749);
-//        genreNumero1.add(18);
-//        genreNumero1.add(99);
-//        genreNumero1.add(27);
-//        genreNumero1.add(12);
-//        genreNumero1.add(53);
-//        genreNumero1.add(28);
-//        genreNumero1.add(12);
-//        genreNumero1.add(9648);
-//        genreNumero1.add(36);
-//        genreNumero1.add(18);
-//        genreNumero1.add(28);
-//        genreNumero1.add(18);
-//        genreNumero1.add(28);
-//        genreNumero1.add(28);
-//        genreNumero1.add(28);
-//        genreNumero1.add(28);
-//        genreNumero1.add(12);
-//        genreNumero1.add(28);
-//        genreNumero1.add(28);
-//        genreNumero1.add(12);
-//        genreNumero1.add(35);
-//        genreNumero1.add(18);
-//        genreNumero1.add(18);
-//        genreNumero1.add(28);
-//        genreNumero1.add(28);
-//        genreNumero1.add(28);
-//        genreNumero1.add(28);
-//        genreNumero1.add(12);
-//        genreNumero1.add(12);
-//        genreNumero1.add(28);
-//        genreNumero1.add(18);
-//        genreNumero1.add(18);
-//        genreNumero1.add(12);
-//        genreNumero1.add(28);
-//        genreNumero1.add(878);
-//        genreNumero1.add(16);
-//        genreNumero1.add(10752);
-//        genreNumero1.add(12);
-//        genreNumero1.add(18);
-//        genreNumero1.add(12);
-//        genreNumero1.add(28);
-//        genreNumero1.add(18);
-//        genreNumero1.add(37);
-//        genreNumero1.add(16);
-//        genreNumero1.add(80);
-//        genreNumero1.add(80);
-//        genreNumero1.add(12);
-//        genreNumero1.add(18);
-//        genreNumero1.add(12);
-//        genreNumero1.add(28);
-//        genreNumero1.add(28);
-//        genreNumero1.add(28);
-//        genreNumero1.add(16);
-//        genreNumero1.add(16);
-//        genreNumero1.add(18);
-//        genreNumero1.add(878);
-//        genreNumero1.add(10751);
-//        genreNumero1.add(12);
-//        genreNumero1.add(12);
-//        genreNumero1.add(12);
-//        genreNumero1.add(16);
-//        genreNumero1.add(12);
-//        genreNumero1.add(35);
-//        genreNumero1.add(878);
-//        genreNumero1.add(53);
-//        genreNumero1.add(16);
-//        genreNumero1.add(878);
-//        genreNumero1.add(12);
-//        genreNumero1.add(28);
-//        genreNumero1.add(80);
-//        genreNumero1.add(12);
-//        genreNumero1.add(12);
-//        genreNumero1.add(53);
-//        genreNumero1.add(12);
-//        genreNumero1.add(28);
-//        genreNumero1.add(878);
-//        genreNumero1.add(12);
-//        genreNumero1.add(28);
-//        genreNumero1.add(28);
-//        genreNumero1.add(10751);
-//        genreNumero1.add(28);
-//        genreNumero1.add(16);
-//        genreNumero1.add(12);
-//        genreNumero1.add(1428);
-//
-//
-//        List<Integer> genreNumero2 = new ArrayList<>();
-//        genreNumero2.add(18);
-//        genreNumero2.add(12);
-//        genreNumero2.add(27);
-//        genreNumero2.add(53);
-//        genreNumero2.add(18);
-//        genreNumero2.add(18);
-//        genreNumero2.add(28);
-//        genreNumero2.add(0);
-//        genreNumero2.add(0);
-//        genreNumero2.add(36);
-//        genreNumero2.add(0);
-//        genreNumero2.add(878);
-//        genreNumero2.add(0);
-//        genreNumero2.add(53);
-//        genreNumero2.add(0);
-//        genreNumero2.add(10770);
-//        genreNumero2.add(80);
-//        genreNumero2.add(28);
-//        genreNumero2.add(16);
-//        genreNumero2.add(80);
-//        genreNumero2.add(80);
-//        genreNumero2.add(14);
-//        genreNumero2.add(53);
-//        genreNumero2.add(18);
-//        genreNumero2.add(80);
-//        genreNumero2.add(9648);
-//        genreNumero2.add(37);
-//        genreNumero2.add(878);
-//        genreNumero2.add(878);
-//        genreNumero2.add(878);
-//        genreNumero2.add(18);
-//        genreNumero2.add(14);
-//        genreNumero2.add(12);
-//        genreNumero2.add(12);
-//        genreNumero2.add(14);
-//        genreNumero2.add(18);
-//        genreNumero2.add(0);
-//        genreNumero2.add(12);
-//        genreNumero2.add(80);
-//        genreNumero2.add(12);
-//        genreNumero2.add(12);
-//        genreNumero2.add(12);
-//        genreNumero2.add(14);
-//        genreNumero2.add(14);
-//        genreNumero2.add(12);
-//        genreNumero2.add(10749);
-//        genreNumero2.add(35);
-//        genreNumero2.add(28);
-//        genreNumero2.add(12);
-//        genreNumero2.add(28);
-//        genreNumero2.add(35);
-//        genreNumero2.add(18);
-//        genreNumero2.add(14);
-//        genreNumero2.add(35);
-//        genreNumero2.add(28);
-//        genreNumero2.add(12);
-//        genreNumero2.add(80);
-//        genreNumero2.add(18);
-//        genreNumero2.add(10751);
-//        genreNumero2.add(18);
-//        genreNumero2.add(35);
-//        genreNumero2.add(28);
-//        genreNumero2.add(28);
-//        genreNumero2.add(14);
-//        genreNumero2.add(12);
-//        genreNumero2.add(12);
-//        genreNumero2.add(12);
-//        genreNumero2.add(35);
-//        genreNumero2.add(10751);
-//        genreNumero2.add(53);
-//        genreNumero2.add(28);
-//        genreNumero2.add(14);
-//        genreNumero2.add(10751);
-//        genreNumero2.add(878);
-//        genreNumero2.add(14);
-//        genreNumero2.add(10751);
-//        genreNumero2.add(35);
-//        genreNumero2.add(0);
-//        genreNumero2.add(28);
-//        genreNumero2.add(18);
-//        genreNumero2.add(12);
-//        genreNumero2.add(53);
-//        genreNumero2.add(14);
-//        genreNumero2.add(12);
-//        genreNumero2.add(9648);
-//        genreNumero2.add(14);
-//        genreNumero2.add(14);
-//        genreNumero2.add(80);
-//        genreNumero2.add(14);
-//        genreNumero2.add(12);
-//        genreNumero2.add(12);
-//        genreNumero2.add(14);
-//        genreNumero2.add(18);
-//        genreNumero2.add(12);
-//        genreNumero2.add(16);
-//        genreNumero2.add(80);
-//        genreNumero2.add(35);
-//        genreNumero2.add(28);
-//        genreNumero2.add(0);
-//
-//
-//        List<Integer> genreNumero3 = new ArrayList<>();
-//        genreNumero3.add(27);
-//        genreNumero3.add(35);
-//        genreNumero3.add(0);
-//        genreNumero3.add(0);
-//        genreNumero3.add(0);
-//        genreNumero3.add(9648);
-//        genreNumero3.add(12);
-//        genreNumero3.add(0);
-//        genreNumero3.add(0);
-//        genreNumero3.add(53);
-//        genreNumero3.add(0);
-//        genreNumero3.add(0);
-//        genreNumero3.add(0);
-//        genreNumero3.add(0);
-//        genreNumero3.add(0);
-//        genreNumero3.add(0);
-//        genreNumero3.add(0);
-//        genreNumero3.add(0);
-//        genreNumero3.add(10751);
-//        genreNumero3.add(0);
-//        genreNumero3.add(18);
-//        genreNumero3.add(28);
-//        genreNumero3.add(18);
-//        genreNumero3.add(53);
-//        genreNumero3.add(0);
-//        genreNumero3.add(878);
-//        genreNumero3.add(0);
-//        genreNumero3.add(12);
-//        genreNumero3.add(0);
-//        genreNumero3.add(0);
-//        genreNumero3.add(878);
-//        genreNumero3.add(28);
-//        genreNumero3.add(878);
-//        genreNumero3.add(878);
-//        genreNumero3.add(28);
-//        genreNumero3.add(10749);
-//        genreNumero3.add(0);
-//        genreNumero3.add(878);
-//        genreNumero3.add(18);
-//        genreNumero3.add(53);
-//        genreNumero3.add(14);
-//        genreNumero3.add(14);
-//        genreNumero3.add(10751);
-//        genreNumero3.add(28);
-//        genreNumero3.add(35);
-//        genreNumero3.add(10749);
-//        genreNumero3.add(16);
-//        genreNumero3.add(878);
-//        genreNumero3.add(878);
-//        genreNumero3.add(18);
-//        genreNumero3.add(10751);
-//        genreNumero3.add(18);
-//        genreNumero3.add(28);
-//        genreNumero3.add(0);
-//        genreNumero3.add(878);
-//        genreNumero3.add(14);
-//        genreNumero3.add(0);
-//        genreNumero3.add(12);
-//        genreNumero3.add(10751);
-//        genreNumero3.add(35);
-//        genreNumero3.add(28);
-//        genreNumero3.add(878);
-//        genreNumero3.add(53);
-//        genreNumero3.add(10751);
-//        genreNumero3.add(14);
-//        genreNumero3.add(14);
-//        genreNumero3.add(14);
-//        genreNumero3.add(10751);
-//        genreNumero3.add(0);
-//        genreNumero3.add(9648);
-//        genreNumero3.add(53);
-//        genreNumero3.add(12);
-//        genreNumero3.add(14);
-//        genreNumero3.add(53);
-//        genreNumero3.add(10751);
-//        genreNumero3.add(0);
-//        genreNumero3.add(878);
-//        genreNumero3.add(0);
-//        genreNumero3.add(12);
-//        genreNumero3.add(878);
-//        genreNumero3.add(10751);
-//        genreNumero3.add(18);
-//        genreNumero3.add(10751);
-//        genreNumero3.add(80);
-//        genreNumero3.add(53);
-//        genreNumero3.add(10751);
-//        genreNumero3.add(10751);
-//        genreNumero3.add(0);
-//        genreNumero3.add(28);
-//        genreNumero3.add(80);
-//        genreNumero3.add(14);
-//        genreNumero3.add(10751);
-//        genreNumero3.add(27);
-//        genreNumero3.add(16);
-//        genreNumero3.add(16);
-//        genreNumero3.add(0);
-//        genreNumero3.add(10751);
-//        genreNumero3.add(14);
-//        genreNumero3.add(0);
-//
-//        // Declare yes / no
-//        List<String> isGood = new ArrayList<>();
-//        isGood.add("yes");
-//        isGood.add("no");
-//        Attribute go = new Attribute("isGood", isGood);
-//
-//        ArrayList<Attribute> atts = new ArrayList<Attribute>();
-//        atts.add(genre1);
-//        atts.add(genre2);
-//        atts.add(genre3);
-//        atts.add(go);
-//
-//
-//        List<String> result = new ArrayList<>();
-//        result.add("no");
-//        result.add("yes");
-//        result.add("no");
-//        result.add("no");
-//        result.add("no");
-//        result.add("no");
-//        result.add("no");
-//        result.add("no");
-//        result.add("yes");
-//        result.add("no");
-//        result.add("no");
-//        result.add("no");
-//        result.add("no");
-//        result.add("no");
-//        result.add("no");
-//        result.add("no");
-//        result.add("no");
-//        result.add("no");
-//        result.add("no");
-//        result.add("yes");
-//        result.add("yes");
-//        result.add("yes");
-//        result.add("no");
-//        result.add("yes");
-//        result.add("no");
-//        result.add("yes");
-//        result.add("yes");
-//        result.add("yes");
-//        result.add("yes");
-//        result.add("yes");
-//        result.add("yes");
-//        result.add("yes");
-//        result.add("yes");
-//        result.add("yes");
-//        result.add("yes");
-//        result.add("no");
-//        result.add("no");
-//        result.add("no");
-//        result.add("yes");
-//        result.add("yes");
-//        result.add("yes");
-//        result.add("yes");
-//        result.add("no");
-//        result.add("yes");
-//        result.add("yes");
-//        result.add("no");
-//        result.add("no");
-//        result.add("yes");
-//        result.add("yes");
-//        result.add("yes");
-//        result.add("no");
-//        result.add("no");
-//        result.add("yes");
-//        result.add("no");
-//        result.add("yes");
-//        result.add("yes");
-//        result.add("no");
-//        result.add("no");
-//        result.add("no");
-//        result.add("yes");
-//        result.add("yes");
-//        result.add("no");
-//        result.add("yes");
-//        result.add("no");
-//        result.add("yes");
-//        result.add("yes");
-//        result.add("yes");
-//        result.add("no");
-//        result.add("no");
-//        result.add("yes");
-//        result.add("yes");
-//        result.add("no");
-//        result.add("no");
-//        result.add("no");
-//        result.add("no");
-//        result.add("no");
-//        result.add("yes");
-//        result.add("no");
-//        result.add("yes");
-//        result.add("yes");
-//        result.add("no");
-//        result.add("no");
-//        result.add("no");
-//        result.add("yes");
-//        result.add("yes");
-//        result.add("no");
-//        result.add("no");
-//        result.add("yes");
-//        result.add("no");
-//        result.add("yes");
-//        result.add("no");
-//        result.add("no");
-//        result.add("yes");
-//        result.add("no");
-//        result.add("no");
-//        result.add("no");
-//        result.add("no");
-//        result.add("no");
-//        result.add("yes");
-//
-//        Instances isTrainingSet = new Instances("training", atts, 10);
-//        isTrainingSet.setClassIndex(3);
-//
-//        for (int i = 0; i < result.size(); i++) {
-//            Instance iExample = new DenseInstance(4);
-//            iExample.setValue(atts.get(0), genreNumero1.get(i));
-//            if (genreNumero2.get(i).equals(0)) {
-//                iExample.setValue(atts.get(1), Utils.missingValue());
-//            } else {
-//                iExample.setValue(atts.get(1), genreNumero2.get(i));
-//            }
-//            if (genreNumero3.get(i).equals(0)) {
-//                iExample.setValue(atts.get(2), Utils.missingValue());
-//            } else {
-//                iExample.setValue(atts.get(2), genreNumero3.get(i));
-//            }
-//            iExample.setValue(atts.get(3), result.get(i));
-//            isTrainingSet.add(iExample);
-//        }
-//
-//
-//
-//        List<Integer> genreNew1 = new ArrayList<>();
-//        genreNew1.add(878);
-//        genreNew1.add(12);
-//        genreNew1.add(28);
-//        genreNew1.add(27);
-//        genreNew1.add(18);
-//        genreNew1.add(28);
-//        genreNew1.add(28);
-//        genreNew1.add(28);
-//        genreNew1.add(28);
-//        genreNew1.add(27);
-//        genreNew1.add(28);
-//        genreNew1.add(36);
-//        genreNew1.add(35);
-//        genreNew1.add(18);
-//        genreNew1.add(27);
-//        genreNew1.add(27);
-//        genreNew1.add(28);
-//        genreNew1.add(27);
-//        genreNew1.add(9648);
-//        genreNew1.add(99);
-//
-//
-//
-//        List<Integer> genreNew2 = new ArrayList<>();
-//        genreNew2.add(0);
-//        genreNew2.add(16);
-//        genreNew2.add(12);
-//        genreNew2.add(53);
-//        genreNew2.add(0);
-//        genreNew2.add(16);
-//        genreNew2.add(12);
-//        genreNew2.add(878);
-//        genreNew2.add(80);
-//        genreNew2.add(9648);
-//        genreNew2.add(12);
-//        genreNew2.add(0);
-//        genreNew2.add(0);
-//        genreNew2.add(0);
-//        genreNew2.add(35);
-//        genreNew2.add(0);
-//        genreNew2.add(12);
-//        genreNew2.add(53);
-//        genreNew2.add(80);
-//        genreNew2.add(0);
-//
-//
-//        List<Integer> genreNew3 = new ArrayList<>();
-//        genreNew3.add(0);
-//        genreNew3.add(10751);
-//        genreNew3.add(14);
-//        genreNew3.add(0);
-//        genreNew3.add(0);
-//        genreNew3.add(878);
-//        genreNew3.add(878);
-//        genreNew3.add(0);
-//        genreNew3.add(53);
-//        genreNew3.add(53);
-//        genreNew3.add(14);
-//        genreNew3.add(0);
-//        genreNew3.add(0);
-//        genreNew3.add(0);
-//        genreNew3.add(0);
-//        genreNew3.add(0);
-//        genreNew3.add(14);
-//        genreNew3.add(0);
-//        genreNew3.add(53);
-//        genreNew3.add(0);
-//
-//
-//
-//        Instances testSet = new Instances("test", atts, 10);
-//
-//        for (int i = 0; i < result.size(); i++) {
-//            Instance iExample = new DenseInstance(4);
-//            iExample.setValue(atts.get(0), genreNew1.get(i));
-//            if (genreNew2.get(i).equals(0)) {
-//                iExample.setValue(atts.get(1), Utils.missingValue());
-//            } else {
-//                iExample.setValue(atts.get(1), genreNew2.get(i));
-//            }
-//            if (genreNew3.get(i).equals(0)) {
-//                iExample.setValue(atts.get(2), Utils.missingValue());
-//            } else {
-//                iExample.setValue(atts.get(2), genreNew3.get(i));
-//            }
-//            iExample.setValue(atts.get(3), Utils.missingValue());
-//            testSet.add(iExample);
-//        }
-//
-//        testSet.setClassIndex(testSet.numAttributes() - 1);
-//
-//        NaiveBayes naiveBayesbis = new NaiveBayes();
-//        naiveBayesbis.buildClassifier(isTrainingSet);
-//
-//
-//        System.out.println("");
-//        System.out.println("");
-//        System.out.println("");
-//        for (int i = 0; i < testSet.size(); i++) {
-//
-//            double label = naiveBayesbis.classifyInstance(testSet.instance(i));
-//            double[] predictionDistribution = naiveBayesbis.distributionForInstance(testSet.instance(i));
-//            testSet.instance(i).setClassValue(label);
-//            System.out.println(testSet.get(i).toString(0)
-//                    + " : " + testSet.get(i).toString(1)
-//                    + " : " + testSet.get(i).toString(2)
-//                    + " : " + testSet.instance(i).toString(3)
-//                    + " : " + Double.toString(predictionDistribution[0]));
-//        }
+    public void test(int teamId) {
 
+
+        Gender genderRepo = genreRepository.findAll().get(0);
+        List<Integer> genderInteger = genderRepo.getGenre_ids();
+        List<String> gender = new ArrayList<>();
+        for (Integer integer :
+                genderInteger) {
+            gender.add(String.valueOf(integer));
+        }
+        Attribute genre1 = new Attribute("genre1", gender);
+
+        //declare
+        Attribute genre2 = new Attribute("genre2", gender);
+
+
+        //declare
+        Attribute genre3 = new Attribute("genre3", gender);
+
+
+        // Declare yes / no
+        List<String> isGood = new ArrayList<>();
+        isGood.add("true");
+        isGood.add("false");
+        Attribute go = new Attribute("isGood", isGood);
+
+        ArrayList<Attribute> atts = new ArrayList<>();
+        atts.add(genre1);
+        atts.add(genre2);
+        atts.add(genre3);
+        atts.add(go);
+
+        List<Learning> pref = learningRepository.findByTeamId(teamId);
+
+
+        if (pref != null) {
+            //petit jeu de donné
+
+            ArrayList<String> genreNumero1Bis = new ArrayList<>();
+            ArrayList<String> genreNumero2Bis = new ArrayList<>();
+            ArrayList<String> genreNumero3Bis = new ArrayList<>();
+            ArrayList<String> resultBis = new ArrayList<>();
+
+
+            for (Learning l :
+                    pref) {
+                genreNumero1Bis.add(l.getGender1());
+                genreNumero2Bis.add(l.getGender2());
+                genreNumero3Bis.add(l.getGender3());
+                resultBis.add(l.getAnswer());
+            }
+
+
+            Instances isTrainingSet = new Instances("training", atts, 10);
+            isTrainingSet.setClassIndex(3);
+
+
+            for (int i = 0; i < resultBis.size(); i++) {
+                if (resultBis.get(i).equals("yes")) {
+                    Instance iExample = new DenseInstance(atts.size());
+                    iExample.setValue(atts.get(0), genreNumero1Bis.get(i));
+                    if (genreNumero2Bis.get(i).equals("0")) {
+                        iExample.setValue(atts.get(1), Utils.missingValue());
+                    } else {
+                        iExample.setValue(atts.get(1), genreNumero2Bis.get(i));
+                    }
+                    if (genreNumero3Bis.get(i).equals("0")) {
+                        iExample.setValue(atts.get(2), Utils.missingValue());
+                    } else {
+                        iExample.setValue(atts.get(2), genreNumero3Bis.get(i));
+                    }
+                    iExample.setValue(atts.get(3), resultBis.get(i));
+                    isTrainingSet.add(iExample);
+                }
+            }
+
+            List<String> genreNew1 = new ArrayList<>();
+            List<String> genreNew2 = new ArrayList<>();
+            List<String> genreNew3 = new ArrayList<>();
+
+            Calendar calendar = Calendar.getInstance();
+            String date = calendar.get(Calendar.YEAR) + "-" + calendar.get(Calendar.MONTH) + 1 + "-" + calendar.get(Calendar.DAY_OF_MONTH);
+            System.out.println("My date" + date);
+
+
+            String uri = "https://api.themoviedb.org/3/discover/movie?api_key=8c04432a7ef30c6867723b9f144916e8&language=fr-FR&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&primary_release_date.gte=" + date;
+
+            String link = "https://image.tmdb.org/t/p/w500";
+            RestTemplate restTemplate = new RestTemplate();
+            MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
+            mappingJackson2HttpMessageConverter.setSupportedMediaTypes(Arrays.asList(MediaType.APPLICATION_JSON, MediaType.APPLICATION_OCTET_STREAM));
+            restTemplate.getMessageConverters().add(mappingJackson2HttpMessageConverter);
+            JsonSearchPage searchPage = restTemplate.getForObject(uri, JsonSearchPage.class);
+            List<String> names = new ArrayList<>();
+
+            List<Movie> moviesSuggest = new ArrayList<>();
+            for (JsonSearchResult res :
+                    searchPage.getResults()) {
+                res.setBackdrop_path(link + res.getBackdrop_path());
+                res.setPoster_path(link + res.getPoster_path());
+                Movie movie = new Movie(res);
+                searchRepository.save(movie);
+                moviesSuggest.add(movie);
+            }
+            for (Movie m :
+                    moviesSuggest) {
+                names.add(m.getTitle());
+                if (!m.getGenre_ids().isEmpty()) {
+                    genreNew1.add(String.valueOf(m.getGenre_ids().get(0)));
+                }
+                if (m.getGenre_ids().size() > 1) {
+                    genreNew2.add(String.valueOf(m.getGenre_ids().get(1)));
+                }
+                if (m.getGenre_ids().size() > 2) {
+                    genreNew3.add(String.valueOf(m.getGenre_ids().get(2)));
+                }
+            }
+
+            Instances testSet = new Instances("test", atts, 10);
+
+            for (int i = 0; i < genreNew1.size(); i++) {
+                Instance iExample = new DenseInstance(atts.size());
+                iExample.setValue(atts.get(0), genreNew1.get(i));
+                if (genreNew2.get(i).equals("0")) {
+                    iExample.setValue(atts.get(1), Utils.missingValue());
+                } else {
+                    iExample.setValue(atts.get(1), genreNew2.get(i));
+                }
+                if (genreNew3.get(i).equals("0")) {
+                    iExample.setValue(atts.get(2), Utils.missingValue());
+                } else {
+                    iExample.setValue(atts.get(2), genreNew3.get(i));
+                }
+                iExample.setValue(atts.get(3), Utils.missingValue());
+                testSet.add(iExample);
+            }
+
+            testSet.setClassIndex(testSet.numAttributes() - 1);
+
+            try {
+                NaiveBayes classifier = new NaiveBayes();
+                classifier.buildClassifier(isTrainingSet);
+
+
+                System.out.println("");
+                System.out.println("");
+                System.out.println("");
+                for (int i = 0; i < testSet.size(); i++) {
+
+                    double label = classifier.classifyInstance(testSet.instance(i));
+                    double[] predictionDistribution = classifier.distributionForInstance(testSet.instance(i));
+                    testSet.instance(i).setClassValue(label);
+                    System.out.println(names.get(i)
+                            + " : " + testSet.get(i).toString(0)
+                            + " : " + testSet.get(i).toString(1)
+                            + " : " + testSet.get(i).toString(2)
+                            + " : " + testSet.instance(i).toString(3)
+                            + " : " + Double.toString(predictionDistribution[0]));
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
+
+        }
     }
 }

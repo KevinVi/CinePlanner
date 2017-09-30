@@ -14,6 +14,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 @Entity
 @Table(name = "MOVIE")
 public class Movie {
@@ -22,38 +23,38 @@ public class Movie {
     private int id;
 
     @Column(name = "vote_count")
-    float vote_count;
+    private float vote_count;
 
     @Column(name = "vote_average")
-    float vote_average;
+    private float vote_average;
 
     @Column(name = "title")
-    String title;
+    private String title;
 
     @Column(name = "popularity")
-    float popularity;
+    private float popularity;
 
     @Column(name = "poster_path")
-    String poster_path;
+    private String poster_path;
 
     @Column(name = "original_language")
-    String original_language;
+    private String original_language;
 
     @Column(name = "original_title")
-    String original_title;
+    private String original_title;
 
     @Column(name = "backdrop_path")
-    String backdrop_path;
+    private String backdrop_path;
 
     @Column(name = "overview", length = 3000)
-    String overview;
+    private String overview;
 
     @Column(name = "release_date")
-    String release_date;
+    private String release_date;
 
     @ElementCollection
     @Column(name = "gender")
-    List<Integer> genre_ids;
+    private List<Integer> genre_ids;
 
     public Movie(JsonSearchResult result) {
         this.id = result.getId();

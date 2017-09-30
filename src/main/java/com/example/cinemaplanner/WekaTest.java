@@ -485,7 +485,7 @@ public class WekaTest {
         genreNumero1Bis.add("28");
         genreNumero1Bis.add("35");
         genreNumero1Bis.add("9648");
-        genreNumero1Bis.add("18");
+//        genreNumero1Bis.add("18");
 
         ArrayList<String> genreNumero2Bis = new ArrayList<>();
         genreNumero2Bis.add("18");
@@ -499,7 +499,7 @@ public class WekaTest {
         genreNumero2Bis.add("12");
         genreNumero2Bis.add("18");
         genreNumero2Bis.add("53");
-        genreNumero2Bis.add("35");
+//        genreNumero2Bis.add("35");
         ArrayList<String> genreNumero3Bis = new ArrayList<>();
         genreNumero3Bis.add("878");
         genreNumero3Bis.add("10751");
@@ -512,58 +512,44 @@ public class WekaTest {
         genreNumero3Bis.add("878");
         genreNumero3Bis.add("10749");
         genreNumero3Bis.add("18");
-        genreNumero3Bis.add("10749");
+//        genreNumero3Bis.add("10749");
 
         ArrayList<String> resultBis = new ArrayList<>();
+        // fake profile
+        resultBis.add("no");
+        resultBis.add("yes");
         resultBis.add("yes");
         resultBis.add("no");
         resultBis.add("no");
         resultBis.add("no");
         resultBis.add("yes");
-        resultBis.add("yes");
-        resultBis.add("yes");
-        resultBis.add("yes");
-        resultBis.add("yes");
         resultBis.add("no");
         resultBis.add("no");
-        resultBis.add("no");
+        resultBis.add("yes");
+        resultBis.add("yes");
         Instances isTrainingSet = new Instances("training", atts, 10);
         isTrainingSet.setClassIndex(3);
 
 
-//        for (int i = 0; i < result.size(); i++) {
-//            Instance iExample = new DenseInstance(atts.size());
-//            System.out.println(genreNumero1.get(i));
-//            iExample.setValue(atts.get(0), genreNumero1.get(i));
-//            if (genreNumero2.get(i).equals("0")) {
-//                iExample.setValue(atts.get(1), Utils.missingValue());
-//            } else {
-//                iExample.setValue(atts.get(1), genreNumero2.get(i));
-//            }
-//            if (genreNumero3.get(i).equals("0")) {
-//                iExample.setValue(atts.get(2), Utils.missingValue());
-//            } else {
-//                iExample.setValue(atts.get(2), genreNumero3.get(i));
-//            }
-//            iExample.setValue(atts.get(3), result.get(i));
-//            isTrainingSet.add(iExample);
-//        }
+
         for (int i = 0; i < resultBis.size(); i++) {
-            Instance iExample = new DenseInstance(atts.size());
-            System.out.println(genreNumero1.get(i));
-            iExample.setValue(atts.get(0), genreNumero1Bis.get(i));
-            if (genreNumero2Bis.get(i).equals("0")) {
-                iExample.setValue(atts.get(1), Utils.missingValue());
-            } else {
-                iExample.setValue(atts.get(1), genreNumero2Bis.get(i));
+            if (resultBis.get(i).equals("yes")) {
+                Instance iExample = new DenseInstance(atts.size());
+                System.out.println(genreNumero1.get(i));
+                iExample.setValue(atts.get(0), genreNumero1Bis.get(i));
+                if (genreNumero2Bis.get(i).equals("0")) {
+                    iExample.setValue(atts.get(1), Utils.missingValue());
+                } else {
+                    iExample.setValue(atts.get(1), genreNumero2Bis.get(i));
+                }
+                if (genreNumero3Bis.get(i).equals("0")) {
+                    iExample.setValue(atts.get(2), Utils.missingValue());
+                } else {
+                    iExample.setValue(atts.get(2), genreNumero3Bis.get(i));
+                }
+                iExample.setValue(atts.get(3), resultBis.get(i));
+                isTrainingSet.add(iExample);
             }
-            if (genreNumero3Bis.get(i).equals("0")) {
-                iExample.setValue(atts.get(2), Utils.missingValue());
-            } else {
-                iExample.setValue(atts.get(2), genreNumero3Bis.get(i));
-            }
-            iExample.setValue(atts.get(3), resultBis.get(i));
-            isTrainingSet.add(iExample);
         }
 
         List<String> genreNew1 = new ArrayList<>();
@@ -661,6 +647,27 @@ public class WekaTest {
         NaiveBayes classifier = new NaiveBayes();
         classifier.buildClassifier(isTrainingSet);
 
+        List<String> names = new ArrayList<>();
+        names.add("Blade");
+        names.add("My");
+        names.add("Thor");
+        names.add("Better");
+        names.add("The");
+        names.add("機動戦士ガンダム");
+        names.add("Avengers");
+        names.add("X");
+        names.add("Brawl");
+        names.add("Happy");
+        names.add("Star");
+        names.add("Professor");
+        names.add("Bad");
+        names.add("Trafficked");
+        names.add("My");
+        names.add("Dead");
+        names.add("Justice");
+        names.add("Saw");
+        names.add("Le");
+        names.add("Another");
 
         System.out.println("");
         System.out.println("");
@@ -670,7 +677,8 @@ public class WekaTest {
             double label = classifier.classifyInstance(testSet.instance(i));
             double[] predictionDistribution = classifier.distributionForInstance(testSet.instance(i));
             testSet.instance(i).setClassValue(label);
-            System.out.println(testSet.get(i).toString(0)
+            System.out.println(names.get(i)
+                    + " : " +testSet.get(i).toString(0)
                     + " : " + testSet.get(i).toString(1)
                     + " : " + testSet.get(i).toString(2)
                     + " : " + testSet.instance(i).toString(3)
