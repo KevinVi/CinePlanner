@@ -46,7 +46,7 @@ public class AccountController {
     public AccountPublic createAccount(@RequestBody BodyAccount body) throws Exception {
         Account accountExist = accountService.findByEmail(body.getLogin());
         if (accountExist == null) {
-            if (body.getLogin()!=null || body.getFirstName()!=null || body.getLastName()!=null || body.getPassword()!=null){
+            if (body.getLogin() == null || body.getFirstName() == null || body.getLastName() == null || body.getPassword() == null) {
                 throw new Exception("Wrong parameters");
             }
             Account account = Account.builder()
@@ -71,7 +71,7 @@ public class AccountController {
      * @return Account Data
      */
     @RequestMapping(value = "/my-account", method = POST)
-    public AccountData getMyAccount(@RequestHeader(value="token") String token) {
+    public AccountData getMyAccount(@RequestHeader(value = "token") String token) {
         Account account = authenticationManager.getAccountFromToken(token);
         AccountPublic accountP = new AccountPublic(account);
         return new AccountData(accountP);
@@ -81,12 +81,12 @@ public class AccountController {
     /**
      * Authenticate Account using login and password.
      *
-     * @param login login
+     * @param login    login
      * @param password password
      * @return token
      */
     @RequestMapping(value = "/authenticate", method = POST)
-    public Token authenticateAccount(@RequestHeader(value="login") String login,@RequestHeader(value="password") String password) {
+    public Token authenticateAccount(@RequestHeader(value = "login") String login, @RequestHeader(value = "password") String password) {
         return new Token(authenticationManager.getTokenByAuthentication(login, password));
     }
 
@@ -99,7 +99,7 @@ public class AccountController {
      * @throws Exception issue
      */
     @RequestMapping(value = "/password", method = POST)
-    public Token changePassword(@RequestHeader(value="token") String token, @RequestBody PasswordChange password) throws Exception {
+    public Token changePassword(@RequestHeader(value = "token") String token, @RequestBody PasswordChange password) throws Exception {
         authenticationManager.mustBeValidToken(token);
         accountService.validatePassword(password.getNewPassword());
 
@@ -121,7 +121,7 @@ public class AccountController {
      * @return AccountPublic
      */
     @RequestMapping(value = "/update", method = POST)
-    public AccountPublic changeInfo(@RequestHeader(value="token") String token,@RequestBody UserInfo info) {
+    public AccountPublic changeInfo(@RequestHeader(value = "token") String token, @RequestBody UserInfo info) {
         authenticationManager.mustBeValidToken(token);
         Account account = authenticationManager.getAccountFromToken(token);
         if (info.getFirstname() != null) {
