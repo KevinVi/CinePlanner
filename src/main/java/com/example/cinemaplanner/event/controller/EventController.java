@@ -197,4 +197,19 @@ public class EventController {
         }
 
     }
+    private void test(){
+        //declare
+        Attribute genre1 = new Attribute("genre1");
+
+        //declare
+        Attribute genre2 = new Attribute("genre");
+
+
+        //declare
+        Attribute genre3 = new Attribute("genre1");
+
+
+        List<Integer> genreNumero1 = new ArrayList<>();
+
+    }
 }

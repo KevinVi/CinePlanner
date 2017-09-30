@@ -43,16 +43,19 @@ public class AccountController {
      * @return AccountPublic
      */
     @RequestMapping(value = "create", method = POST)
-    public AccountPublic createAccount(@RequestBody BodyAccount body) {
+    public AccountPublic createAccount(@RequestBody BodyAccount body) throws Exception {
         Account accountExist = accountService.findByEmail(body.getLogin());
         if (accountExist == null) {
+            if (body.getLogin()!=null || body.getFirstName()!=null || body.getLastName()!=null || body.getPassword()!=null){
+                throw new Exception("Wrong parameters");
+            }
             Account account = Account.builder()
                     .login(body.getLogin())
                     .password(body.getPassword())
                     .firstName(body.getFirstName())
                     .lastName(body.getLastName())
                     .build();
-            accountService.saveAccount(account);
+            accountService.updateAccount(account);
             return new AccountPublic(account);
         } else {
             throw new AccountAlreadyExist();
