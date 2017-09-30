@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
@@ -150,8 +151,8 @@ public class EventController {
 
             for (JsonSearchResult res :
                     searchPage.getResults()) {
-                res.setBackdrop_path(imageUrl.getImages().getUrl() + "original" + res.getBackdrop_path());
-                res.setPoster_path(imageUrl.getImages().getUrl() + "original" + res.getPoster_path());
+                res.setBackdrop_path(imageUrl.getImages().getUrl() + "w500" + res.getBackdrop_path());
+                res.setPoster_path(imageUrl.getImages().getUrl() + "w500" + res.getPoster_path());
                 Movie movie = new Movie(res);
                 movies.add(movie);
                 searchRepository.save(movie);
@@ -165,9 +166,9 @@ public class EventController {
         }
 
     }
-
-    private void machineLearning() {
-
+    @RequestMapping(value = "movies", method = GET)
+    public List<Movie> machineLearning() {
+          return searchRepository.findAll();
     }
 
     @RequestMapping(value = "delete", method = POST)
@@ -197,118 +198,570 @@ public class EventController {
         }
 
     }
-    private void test(){
-        //declare
-        Attribute genre1 = new Attribute("genre1");
 
-        //declare
-        Attribute genre2 = new Attribute("genre");
-
-
-        //declare
-        Attribute genre3 = new Attribute("genre1");
-
-
-        List<Integer> genreNumero1 = new ArrayList<>();
-        genreNumero1.add(12);
-        genreNumero1.add(28);
-        genreNumero1.add(18);
-        genreNumero1.add(28);
-        genreNumero1.add(35);
-        genreNumero1.add(878);
-        genreNumero1.add(35);
-        genreNumero1.add(99);
-        genreNumero1.add(878);
-        genreNumero1.add(18);
-        genreNumero1.add(53);
-        genreNumero1.add(18);
-        genreNumero1.add(35);
-        genreNumero1.add(18);
-        genreNumero1.add(10749);
-        genreNumero1.add(18);
-        genreNumero1.add(99);
-        genreNumero1.add(27);
-        genreNumero1.add(12);
-        genreNumero1.add(53);
-        genreNumero1.add(28);
-        genreNumero1.add(12);
-        genreNumero1.add(9648);
-        genreNumero1.add(36);
-        genreNumero1.add(18);
-        genreNumero1.add(28);
-        genreNumero1.add(18);
-        genreNumero1.add(28);
-        genreNumero1.add(28);
-        genreNumero1.add(28);
-        genreNumero1.add(28);
-        genreNumero1.add(12);
-        genreNumero1.add(28);
-        genreNumero1.add(28);
-        genreNumero1.add(12);
-        genreNumero1.add(35);
-        genreNumero1.add(18);
-        genreNumero1.add(18);
-        genreNumero1.add(28);
-        genreNumero1.add(28);
-        genreNumero1.add(28);
-        genreNumero1.add(28);
-        genreNumero1.add(12);
-        genreNumero1.add(12);
-        genreNumero1.add(28);
-        genreNumero1.add(18);
-        genreNumero1.add(18);
-        genreNumero1.add(12);
-        genreNumero1.add(28);
-        genreNumero1.add(878);
-        genreNumero1.add(16);
-        genreNumero1.add(10752);
-        genreNumero1.add(12);
-        genreNumero1.add(18);
-        genreNumero1.add(12);
-        genreNumero1.add(28);
-        genreNumero1.add(18);
-        genreNumero1.add(37);
-        genreNumero1.add(16);
-        genreNumero1.add(80);
-        genreNumero1.add(80);
-        genreNumero1.add(12);
-        genreNumero1.add(18);
-        genreNumero1.add(12);
-        genreNumero1.add(28);
-        genreNumero1.add(28);
-        genreNumero1.add(28);
-        genreNumero1.add(16);
-        genreNumero1.add(16);
-        genreNumero1.add(18);
-        genreNumero1.add(878);
-        genreNumero1.add(10751);
-        genreNumero1.add(12);
-        genreNumero1.add(12);
-        genreNumero1.add(12);
-        genreNumero1.add(16);
-        genreNumero1.add(12);
-        genreNumero1.add(35);
-        genreNumero1.add(878);
-        genreNumero1.add(53);
-        genreNumero1.add(16);
-        genreNumero1.add(878);
-        genreNumero1.add(12);
-        genreNumero1.add(28);
-        genreNumero1.add(80);
-        genreNumero1.add(12);
-        genreNumero1.add(12);
-        genreNumero1.add(53);
-        genreNumero1.add(12);
-        genreNumero1.add(28);
-        genreNumero1.add(878);
-        genreNumero1.add(12);
-        genreNumero1.add(28);
-        genreNumero1.add(28);
-        genreNumero1.add(10751);
-        genreNumero1.add(28);
-        genreNumero1.add(16);
-        genreNumero1.add(12);
-        genreNumero1.add(1428);
+    private void test() {
+//        //declare
+//        Attribute genre1 = new Attribute("genre1");
+//
+//        //declare
+//        Attribute genre2 = new Attribute("genre");
+//
+//
+//        //declare
+//        Attribute genre3 = new Attribute("genre1");
+//
+//
+//        List<Integer> genreNumero1 = new ArrayList<>();
+//        genreNumero1.add(12);
+//        genreNumero1.add(28);
+//        genreNumero1.add(18);
+//        genreNumero1.add(28);
+//        genreNumero1.add(35);
+//        genreNumero1.add(878);
+//        genreNumero1.add(35);
+//        genreNumero1.add(99);
+//        genreNumero1.add(878);
+//        genreNumero1.add(18);
+//        genreNumero1.add(53);
+//        genreNumero1.add(18);
+//        genreNumero1.add(35);
+//        genreNumero1.add(18);
+//        genreNumero1.add(10749);
+//        genreNumero1.add(18);
+//        genreNumero1.add(99);
+//        genreNumero1.add(27);
+//        genreNumero1.add(12);
+//        genreNumero1.add(53);
+//        genreNumero1.add(28);
+//        genreNumero1.add(12);
+//        genreNumero1.add(9648);
+//        genreNumero1.add(36);
+//        genreNumero1.add(18);
+//        genreNumero1.add(28);
+//        genreNumero1.add(18);
+//        genreNumero1.add(28);
+//        genreNumero1.add(28);
+//        genreNumero1.add(28);
+//        genreNumero1.add(28);
+//        genreNumero1.add(12);
+//        genreNumero1.add(28);
+//        genreNumero1.add(28);
+//        genreNumero1.add(12);
+//        genreNumero1.add(35);
+//        genreNumero1.add(18);
+//        genreNumero1.add(18);
+//        genreNumero1.add(28);
+//        genreNumero1.add(28);
+//        genreNumero1.add(28);
+//        genreNumero1.add(28);
+//        genreNumero1.add(12);
+//        genreNumero1.add(12);
+//        genreNumero1.add(28);
+//        genreNumero1.add(18);
+//        genreNumero1.add(18);
+//        genreNumero1.add(12);
+//        genreNumero1.add(28);
+//        genreNumero1.add(878);
+//        genreNumero1.add(16);
+//        genreNumero1.add(10752);
+//        genreNumero1.add(12);
+//        genreNumero1.add(18);
+//        genreNumero1.add(12);
+//        genreNumero1.add(28);
+//        genreNumero1.add(18);
+//        genreNumero1.add(37);
+//        genreNumero1.add(16);
+//        genreNumero1.add(80);
+//        genreNumero1.add(80);
+//        genreNumero1.add(12);
+//        genreNumero1.add(18);
+//        genreNumero1.add(12);
+//        genreNumero1.add(28);
+//        genreNumero1.add(28);
+//        genreNumero1.add(28);
+//        genreNumero1.add(16);
+//        genreNumero1.add(16);
+//        genreNumero1.add(18);
+//        genreNumero1.add(878);
+//        genreNumero1.add(10751);
+//        genreNumero1.add(12);
+//        genreNumero1.add(12);
+//        genreNumero1.add(12);
+//        genreNumero1.add(16);
+//        genreNumero1.add(12);
+//        genreNumero1.add(35);
+//        genreNumero1.add(878);
+//        genreNumero1.add(53);
+//        genreNumero1.add(16);
+//        genreNumero1.add(878);
+//        genreNumero1.add(12);
+//        genreNumero1.add(28);
+//        genreNumero1.add(80);
+//        genreNumero1.add(12);
+//        genreNumero1.add(12);
+//        genreNumero1.add(53);
+//        genreNumero1.add(12);
+//        genreNumero1.add(28);
+//        genreNumero1.add(878);
+//        genreNumero1.add(12);
+//        genreNumero1.add(28);
+//        genreNumero1.add(28);
+//        genreNumero1.add(10751);
+//        genreNumero1.add(28);
+//        genreNumero1.add(16);
+//        genreNumero1.add(12);
+//        genreNumero1.add(1428);
+//
+//
+//        List<Integer> genreNumero2 = new ArrayList<>();
+//        genreNumero2.add(18);
+//        genreNumero2.add(12);
+//        genreNumero2.add(27);
+//        genreNumero2.add(53);
+//        genreNumero2.add(18);
+//        genreNumero2.add(18);
+//        genreNumero2.add(28);
+//        genreNumero2.add(0);
+//        genreNumero2.add(0);
+//        genreNumero2.add(36);
+//        genreNumero2.add(0);
+//        genreNumero2.add(878);
+//        genreNumero2.add(0);
+//        genreNumero2.add(53);
+//        genreNumero2.add(0);
+//        genreNumero2.add(10770);
+//        genreNumero2.add(80);
+//        genreNumero2.add(28);
+//        genreNumero2.add(16);
+//        genreNumero2.add(80);
+//        genreNumero2.add(80);
+//        genreNumero2.add(14);
+//        genreNumero2.add(53);
+//        genreNumero2.add(18);
+//        genreNumero2.add(80);
+//        genreNumero2.add(9648);
+//        genreNumero2.add(37);
+//        genreNumero2.add(878);
+//        genreNumero2.add(878);
+//        genreNumero2.add(878);
+//        genreNumero2.add(18);
+//        genreNumero2.add(14);
+//        genreNumero2.add(12);
+//        genreNumero2.add(12);
+//        genreNumero2.add(14);
+//        genreNumero2.add(18);
+//        genreNumero2.add(0);
+//        genreNumero2.add(12);
+//        genreNumero2.add(80);
+//        genreNumero2.add(12);
+//        genreNumero2.add(12);
+//        genreNumero2.add(12);
+//        genreNumero2.add(14);
+//        genreNumero2.add(14);
+//        genreNumero2.add(12);
+//        genreNumero2.add(10749);
+//        genreNumero2.add(35);
+//        genreNumero2.add(28);
+//        genreNumero2.add(12);
+//        genreNumero2.add(28);
+//        genreNumero2.add(35);
+//        genreNumero2.add(18);
+//        genreNumero2.add(14);
+//        genreNumero2.add(35);
+//        genreNumero2.add(28);
+//        genreNumero2.add(12);
+//        genreNumero2.add(80);
+//        genreNumero2.add(18);
+//        genreNumero2.add(10751);
+//        genreNumero2.add(18);
+//        genreNumero2.add(35);
+//        genreNumero2.add(28);
+//        genreNumero2.add(28);
+//        genreNumero2.add(14);
+//        genreNumero2.add(12);
+//        genreNumero2.add(12);
+//        genreNumero2.add(12);
+//        genreNumero2.add(35);
+//        genreNumero2.add(10751);
+//        genreNumero2.add(53);
+//        genreNumero2.add(28);
+//        genreNumero2.add(14);
+//        genreNumero2.add(10751);
+//        genreNumero2.add(878);
+//        genreNumero2.add(14);
+//        genreNumero2.add(10751);
+//        genreNumero2.add(35);
+//        genreNumero2.add(0);
+//        genreNumero2.add(28);
+//        genreNumero2.add(18);
+//        genreNumero2.add(12);
+//        genreNumero2.add(53);
+//        genreNumero2.add(14);
+//        genreNumero2.add(12);
+//        genreNumero2.add(9648);
+//        genreNumero2.add(14);
+//        genreNumero2.add(14);
+//        genreNumero2.add(80);
+//        genreNumero2.add(14);
+//        genreNumero2.add(12);
+//        genreNumero2.add(12);
+//        genreNumero2.add(14);
+//        genreNumero2.add(18);
+//        genreNumero2.add(12);
+//        genreNumero2.add(16);
+//        genreNumero2.add(80);
+//        genreNumero2.add(35);
+//        genreNumero2.add(28);
+//        genreNumero2.add(0);
+//
+//
+//        List<Integer> genreNumero3 = new ArrayList<>();
+//        genreNumero3.add(27);
+//        genreNumero3.add(35);
+//        genreNumero3.add(0);
+//        genreNumero3.add(0);
+//        genreNumero3.add(0);
+//        genreNumero3.add(9648);
+//        genreNumero3.add(12);
+//        genreNumero3.add(0);
+//        genreNumero3.add(0);
+//        genreNumero3.add(53);
+//        genreNumero3.add(0);
+//        genreNumero3.add(0);
+//        genreNumero3.add(0);
+//        genreNumero3.add(0);
+//        genreNumero3.add(0);
+//        genreNumero3.add(0);
+//        genreNumero3.add(0);
+//        genreNumero3.add(0);
+//        genreNumero3.add(10751);
+//        genreNumero3.add(0);
+//        genreNumero3.add(18);
+//        genreNumero3.add(28);
+//        genreNumero3.add(18);
+//        genreNumero3.add(53);
+//        genreNumero3.add(0);
+//        genreNumero3.add(878);
+//        genreNumero3.add(0);
+//        genreNumero3.add(12);
+//        genreNumero3.add(0);
+//        genreNumero3.add(0);
+//        genreNumero3.add(878);
+//        genreNumero3.add(28);
+//        genreNumero3.add(878);
+//        genreNumero3.add(878);
+//        genreNumero3.add(28);
+//        genreNumero3.add(10749);
+//        genreNumero3.add(0);
+//        genreNumero3.add(878);
+//        genreNumero3.add(18);
+//        genreNumero3.add(53);
+//        genreNumero3.add(14);
+//        genreNumero3.add(14);
+//        genreNumero3.add(10751);
+//        genreNumero3.add(28);
+//        genreNumero3.add(35);
+//        genreNumero3.add(10749);
+//        genreNumero3.add(16);
+//        genreNumero3.add(878);
+//        genreNumero3.add(878);
+//        genreNumero3.add(18);
+//        genreNumero3.add(10751);
+//        genreNumero3.add(18);
+//        genreNumero3.add(28);
+//        genreNumero3.add(0);
+//        genreNumero3.add(878);
+//        genreNumero3.add(14);
+//        genreNumero3.add(0);
+//        genreNumero3.add(12);
+//        genreNumero3.add(10751);
+//        genreNumero3.add(35);
+//        genreNumero3.add(28);
+//        genreNumero3.add(878);
+//        genreNumero3.add(53);
+//        genreNumero3.add(10751);
+//        genreNumero3.add(14);
+//        genreNumero3.add(14);
+//        genreNumero3.add(14);
+//        genreNumero3.add(10751);
+//        genreNumero3.add(0);
+//        genreNumero3.add(9648);
+//        genreNumero3.add(53);
+//        genreNumero3.add(12);
+//        genreNumero3.add(14);
+//        genreNumero3.add(53);
+//        genreNumero3.add(10751);
+//        genreNumero3.add(0);
+//        genreNumero3.add(878);
+//        genreNumero3.add(0);
+//        genreNumero3.add(12);
+//        genreNumero3.add(878);
+//        genreNumero3.add(10751);
+//        genreNumero3.add(18);
+//        genreNumero3.add(10751);
+//        genreNumero3.add(80);
+//        genreNumero3.add(53);
+//        genreNumero3.add(10751);
+//        genreNumero3.add(10751);
+//        genreNumero3.add(0);
+//        genreNumero3.add(28);
+//        genreNumero3.add(80);
+//        genreNumero3.add(14);
+//        genreNumero3.add(10751);
+//        genreNumero3.add(27);
+//        genreNumero3.add(16);
+//        genreNumero3.add(16);
+//        genreNumero3.add(0);
+//        genreNumero3.add(10751);
+//        genreNumero3.add(14);
+//        genreNumero3.add(0);
+//
+//        // Declare yes / no
+//        List<String> isGood = new ArrayList<>();
+//        isGood.add("yes");
+//        isGood.add("no");
+//        Attribute go = new Attribute("isGood", isGood);
+//
+//        ArrayList<Attribute> atts = new ArrayList<Attribute>();
+//        atts.add(genre1);
+//        atts.add(genre2);
+//        atts.add(genre3);
+//        atts.add(go);
+//
+//
+//        List<String> result = new ArrayList<>();
+//        result.add("no");
+//        result.add("yes");
+//        result.add("no");
+//        result.add("no");
+//        result.add("no");
+//        result.add("no");
+//        result.add("no");
+//        result.add("no");
+//        result.add("yes");
+//        result.add("no");
+//        result.add("no");
+//        result.add("no");
+//        result.add("no");
+//        result.add("no");
+//        result.add("no");
+//        result.add("no");
+//        result.add("no");
+//        result.add("no");
+//        result.add("no");
+//        result.add("yes");
+//        result.add("yes");
+//        result.add("yes");
+//        result.add("no");
+//        result.add("yes");
+//        result.add("no");
+//        result.add("yes");
+//        result.add("yes");
+//        result.add("yes");
+//        result.add("yes");
+//        result.add("yes");
+//        result.add("yes");
+//        result.add("yes");
+//        result.add("yes");
+//        result.add("yes");
+//        result.add("yes");
+//        result.add("no");
+//        result.add("no");
+//        result.add("no");
+//        result.add("yes");
+//        result.add("yes");
+//        result.add("yes");
+//        result.add("yes");
+//        result.add("no");
+//        result.add("yes");
+//        result.add("yes");
+//        result.add("no");
+//        result.add("no");
+//        result.add("yes");
+//        result.add("yes");
+//        result.add("yes");
+//        result.add("no");
+//        result.add("no");
+//        result.add("yes");
+//        result.add("no");
+//        result.add("yes");
+//        result.add("yes");
+//        result.add("no");
+//        result.add("no");
+//        result.add("no");
+//        result.add("yes");
+//        result.add("yes");
+//        result.add("no");
+//        result.add("yes");
+//        result.add("no");
+//        result.add("yes");
+//        result.add("yes");
+//        result.add("yes");
+//        result.add("no");
+//        result.add("no");
+//        result.add("yes");
+//        result.add("yes");
+//        result.add("no");
+//        result.add("no");
+//        result.add("no");
+//        result.add("no");
+//        result.add("no");
+//        result.add("yes");
+//        result.add("no");
+//        result.add("yes");
+//        result.add("yes");
+//        result.add("no");
+//        result.add("no");
+//        result.add("no");
+//        result.add("yes");
+//        result.add("yes");
+//        result.add("no");
+//        result.add("no");
+//        result.add("yes");
+//        result.add("no");
+//        result.add("yes");
+//        result.add("no");
+//        result.add("no");
+//        result.add("yes");
+//        result.add("no");
+//        result.add("no");
+//        result.add("no");
+//        result.add("no");
+//        result.add("no");
+//        result.add("yes");
+//
+//        Instances isTrainingSet = new Instances("training", atts, 10);
+//        isTrainingSet.setClassIndex(3);
+//
+//        for (int i = 0; i < result.size(); i++) {
+//            Instance iExample = new DenseInstance(4);
+//            iExample.setValue(atts.get(0), genreNumero1.get(i));
+//            if (genreNumero2.get(i).equals(0)) {
+//                iExample.setValue(atts.get(1), Utils.missingValue());
+//            } else {
+//                iExample.setValue(atts.get(1), genreNumero2.get(i));
+//            }
+//            if (genreNumero3.get(i).equals(0)) {
+//                iExample.setValue(atts.get(2), Utils.missingValue());
+//            } else {
+//                iExample.setValue(atts.get(2), genreNumero3.get(i));
+//            }
+//            iExample.setValue(atts.get(3), result.get(i));
+//            isTrainingSet.add(iExample);
+//        }
+//
+//
+//
+//        List<Integer> genreNew1 = new ArrayList<>();
+//        genreNew1.add(878);
+//        genreNew1.add(12);
+//        genreNew1.add(28);
+//        genreNew1.add(27);
+//        genreNew1.add(18);
+//        genreNew1.add(28);
+//        genreNew1.add(28);
+//        genreNew1.add(28);
+//        genreNew1.add(28);
+//        genreNew1.add(27);
+//        genreNew1.add(28);
+//        genreNew1.add(36);
+//        genreNew1.add(35);
+//        genreNew1.add(18);
+//        genreNew1.add(27);
+//        genreNew1.add(27);
+//        genreNew1.add(28);
+//        genreNew1.add(27);
+//        genreNew1.add(9648);
+//        genreNew1.add(99);
+//
+//
+//
+//        List<Integer> genreNew2 = new ArrayList<>();
+//        genreNew2.add(0);
+//        genreNew2.add(16);
+//        genreNew2.add(12);
+//        genreNew2.add(53);
+//        genreNew2.add(0);
+//        genreNew2.add(16);
+//        genreNew2.add(12);
+//        genreNew2.add(878);
+//        genreNew2.add(80);
+//        genreNew2.add(9648);
+//        genreNew2.add(12);
+//        genreNew2.add(0);
+//        genreNew2.add(0);
+//        genreNew2.add(0);
+//        genreNew2.add(35);
+//        genreNew2.add(0);
+//        genreNew2.add(12);
+//        genreNew2.add(53);
+//        genreNew2.add(80);
+//        genreNew2.add(0);
+//
+//
+//        List<Integer> genreNew3 = new ArrayList<>();
+//        genreNew3.add(0);
+//        genreNew3.add(10751);
+//        genreNew3.add(14);
+//        genreNew3.add(0);
+//        genreNew3.add(0);
+//        genreNew3.add(878);
+//        genreNew3.add(878);
+//        genreNew3.add(0);
+//        genreNew3.add(53);
+//        genreNew3.add(53);
+//        genreNew3.add(14);
+//        genreNew3.add(0);
+//        genreNew3.add(0);
+//        genreNew3.add(0);
+//        genreNew3.add(0);
+//        genreNew3.add(0);
+//        genreNew3.add(14);
+//        genreNew3.add(0);
+//        genreNew3.add(53);
+//        genreNew3.add(0);
+//
+//
+//
+//        Instances testSet = new Instances("test", atts, 10);
+//
+//        for (int i = 0; i < result.size(); i++) {
+//            Instance iExample = new DenseInstance(4);
+//            iExample.setValue(atts.get(0), genreNew1.get(i));
+//            if (genreNew2.get(i).equals(0)) {
+//                iExample.setValue(atts.get(1), Utils.missingValue());
+//            } else {
+//                iExample.setValue(atts.get(1), genreNew2.get(i));
+//            }
+//            if (genreNew3.get(i).equals(0)) {
+//                iExample.setValue(atts.get(2), Utils.missingValue());
+//            } else {
+//                iExample.setValue(atts.get(2), genreNew3.get(i));
+//            }
+//            iExample.setValue(atts.get(3), Utils.missingValue());
+//            testSet.add(iExample);
+//        }
+//
+//        testSet.setClassIndex(testSet.numAttributes() - 1);
+//
+//        NaiveBayes naiveBayesbis = new NaiveBayes();
+//        naiveBayesbis.buildClassifier(isTrainingSet);
+//
+//
+//        System.out.println("");
+//        System.out.println("");
+//        System.out.println("");
+//        for (int i = 0; i < testSet.size(); i++) {
+//
+//            double label = naiveBayesbis.classifyInstance(testSet.instance(i));
+//            double[] predictionDistribution = naiveBayesbis.distributionForInstance(testSet.instance(i));
+//            testSet.instance(i).setClassValue(label);
+//            System.out.println(testSet.get(i).toString(0)
+//                    + " : " + testSet.get(i).toString(1)
+//                    + " : " + testSet.get(i).toString(2)
+//                    + " : " + testSet.instance(i).toString(3)
+//                    + " : " + Double.toString(predictionDistribution[0]));
+//        }
 
     }
 }

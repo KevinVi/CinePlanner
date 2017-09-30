@@ -16,10 +16,14 @@ public class AccountPublic {
 
     private int id;
     private String login;
+    private String firstName;
+    private String lastName;
 
     public AccountPublic( Account account )
     {
         this.id = account.getId();
         this.login = account.getLogin();
+        this.firstName = account.getFirstName();
+        this.lastName = account.getLastName();
     }
 }
