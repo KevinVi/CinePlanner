@@ -82,12 +82,15 @@ public class TeamController {
 
             if (info.getUsers() != null) {
                 for (String user : info.getUsers()) {
+                    System.out.println(info.getUsers());
                     Account guest = accountService.getAccountByLogin(user);
                     if (guest != null) {
-                        emailService.addToTeam(guest.getLogin(), "localhost:8080/");
+                        if (guest.getId() != account.getId()) {
+                            emailService.addToTeam(guest.getLogin(), "www.google.com");
+                        }
                     } else {
-                        emailService.addToTeamNewAccount(user, "localhost:8080/");
                         //send mail to create and invite using creator and name
+                        emailService.addToTeamNewAccount(user, "www.google.com");
                     }
                 }
             }
@@ -216,12 +219,14 @@ public class TeamController {
         if (account != null) {
             Account guest = accountService.getAccountByLogin(invite.getString());
             if (guest != null) {
-                //send mail to notify invite using creator and name
-                return true;
+                if (guest.getId() != account.getId()) {
+                    emailService.addToTeam(guest.getLogin(), "www.google.com");
+                }
             } else {
                 //send mail to create and invite using creator and name
-                return true;
+                emailService.addToTeamNewAccount(invite.getString(), "www.google.com");
             }
+            return true;
         } else {
             throw new MustBeAuthenticatedException();
         }

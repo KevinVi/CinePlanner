@@ -46,7 +46,7 @@ public class CommentController {
                 if (comment.getComment() != null) {
                     if (!comment.getComment().isEmpty()) {
                         Comment comment1 = new Comment();
-                        comment1.setAuthor(account.getLogin());
+                        comment1.setAuthor(account.getFirstName());
                         comment1.setComment(comment.getComment());
                         Calendar calendar = Calendar.getInstance();
                         comment1.setDateCreated(calendar.getTime().getTime());

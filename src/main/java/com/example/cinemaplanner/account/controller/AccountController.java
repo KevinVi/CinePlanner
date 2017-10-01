@@ -67,6 +67,8 @@ public class AccountController {
                     .firstName(body.getFirstName())
                     .lastName(body.getLastName())
                     .build();
+            emailService.accountCreated(account.getLogin(), account.getLogin(), account.getPassword());
+
             accountService.updateAccount(account);
             return new AccountPublic(account);
         } else {

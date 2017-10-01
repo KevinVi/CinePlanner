@@ -29,7 +29,7 @@ public class MailService {
             MimeMessagePreparator messagePreparator = mimeMessage -> {
                 MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
                 messageHelper.setTo(to);
-                messageHelper.setSubject("Sample mail subject");
+                messageHelper.setSubject("Demande de restauration de mot de passe");
                 String content = mailContentBuilder.buildRestorePasswordConfirmation(text);
                 messageHelper.setText(content, true);
             };
@@ -47,7 +47,7 @@ public class MailService {
             MimeMessagePreparator messagePreparator = mimeMessage -> {
                 MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
                 messageHelper.setTo(to);
-                messageHelper.setSubject("New Team Cinecplanner");
+                messageHelper.setSubject("Nouvelle Team Cineplanner");
                 String content = mailContentBuilder.buildAddToTeam(text);
                 messageHelper.setText(content, true);
             };
@@ -66,7 +66,7 @@ public class MailService {
             MimeMessagePreparator messagePreparator = mimeMessage -> {
                 MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
                 messageHelper.setTo(to);
-                messageHelper.setSubject("Join Cinecplanner ! ");
+                messageHelper.setSubject("Rejoignez Cineplanner ! ");
                 String content = mailContentBuilder.buildAddToTeamNewAccount(text);
                 messageHelper.setText(content, true);
             };
@@ -84,7 +84,7 @@ public class MailService {
             MimeMessagePreparator messagePreparator = mimeMessage -> {
                 MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
                 messageHelper.setTo(to);
-                messageHelper.setSubject("Sample mail subject");
+                messageHelper.setSubject("Nouveau mot de passe");
                 String content = mailContentBuilder.buildRestorePasswordSend(text);
                 messageHelper.setText(content, true);
             };
@@ -102,7 +102,7 @@ public class MailService {
             MimeMessagePreparator messagePreparator = mimeMessage -> {
                 MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
                 messageHelper.setTo(to);
-                messageHelper.setSubject("Sample mail subject");
+                messageHelper.setSubject("Nouveau compte cineplanner");
                 String content = mailContentBuilder.buildAccountCreated(login, password);
                 messageHelper.setText(content, true);
             };
