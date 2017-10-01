@@ -49,6 +49,18 @@ public class AccountController {
             if (body.getLogin() == null || body.getFirstName() == null || body.getLastName() == null || body.getPassword() == null) {
                 throw new Exception("Wrong parameters");
             }
+            if (body.getLogin().isEmpty()) {
+                throw new Exception("Login empty");
+            }
+            if (body.getPassword().isEmpty()) {
+                throw new Exception("Password empty");
+            }
+            if (body.getLastName().isEmpty()) {
+                throw new Exception("Lastname empty");
+            }
+            if (body.getFirstName().isEmpty()) {
+                throw new Exception("Firstname empty");
+            }
             Account account = Account.builder()
                     .login(body.getLogin())
                     .password(body.getPassword())
@@ -121,7 +133,7 @@ public class AccountController {
      * @return AccountPublic
      */
     @RequestMapping(value = "/update", method = POST)
-    public AccountPublic changeInfo(@RequestHeader(value = "token") String token, @RequestBody UserInfo info) {
+    public AccountPublic changeInfo(@RequestHeader(value = "token") String token, @RequestBody UserInfo info) throws Exception {
         authenticationManager.mustBeValidToken(token);
         Account account = authenticationManager.getAccountFromToken(token);
         if (info.getFirstname() != null) {
@@ -129,14 +141,22 @@ public class AccountController {
                 if (!info.getFirstname().equals(account.getFirstName())) {
                     account.setFirstName(info.getFirstname());
                 }
+            } else {
+                throw new Exception("Lastname empty");
             }
+        } else {
+            throw new Exception("Firstname empty");
         }
         if (info.getLastname() != null) {
             if (!info.getLastname().isEmpty()) {
                 if (!info.getLastname().equals(account.getLastName())) {
                     account.setLastName(info.getLastname());
                 }
+            } else {
+                throw new Exception("Lastname empty");
             }
+        } else {
+            throw new Exception("Lastname empty");
         }
 
         accountService.saveAccount(account);
