@@ -127,6 +127,7 @@ public class TeamController {
         Account account = authenticationManager.getAccountFromToken(token);
         if (account != null) {
             List<Movie> movies = searchRepository.findAll();
+            System.out.println("movie size" + movies.size());
             movies = movies.subList(0, 11);
             System.out.println(movies);
             return movies;
@@ -159,9 +160,11 @@ public class TeamController {
         if (account != null) {
             if (body.getContent() != null) {
                 if (!body.getContent().isEmpty()) {
+                    System.out.println("bodysize ->" + body.getContent().size());
                     for (LearningContent content :
                             body.getContent()) {
                         Movie movie = searchRepository.findById(content.getIdMovie());
+                        System.out.println("Movie : " + movie);
                         if (movie != null) {
                             Learning learning = new Learning();
                             learning.setAnswer(String.valueOf(content.isLiked()).toLowerCase());
@@ -313,8 +316,11 @@ public class TeamController {
                 genreNumero2Bis.add(l.getGender2());
                 genreNumero3Bis.add(l.getGender3());
                 resultBis.add(l.getAnswer());
+
+                System.out.println("l->" + l.toString());
             }
 
+            System.out.println("pref size->" + pref.size());
 
             Instances isTrainingSet = new Instances("training", atts, 10);
             isTrainingSet.setClassIndex(3);
@@ -416,6 +422,7 @@ public class TeamController {
                 System.out.println("");
                 System.out.println("");
                 System.out.println("");
+                System.out.println("training set" + isTrainingSet.toString());
                 for (int i = 0; i < testSet.size(); i++) {
 
                     double label = classifier.classifyInstance(testSet.instance(i));

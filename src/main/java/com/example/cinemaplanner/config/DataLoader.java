@@ -69,9 +69,9 @@ public class DataLoader implements ApplicationRunner {
             queriesTest.add("The Wolf of Wall Street");
             queriesTest.add("World War Z");
             queriesTest.add("Shutter Island");
-            queriesTest.add("Star Wars");
+            queriesTest.add("Star Wars, épisode VII - le Réveil de la Force");
             queriesTest.add("Avengers: Age of Ultron");
-            queriesTest.add("Forrest Gump");
+            queriesTest.add("La La Land");
             queriesTest.add("Gone Girl");
             final String uri = "https://api.themoviedb.org/3/search/movie?api_key=8c04432a7ef30c6867723b9f144916e8&language=fr-FR&query=";
             final String genderUri = "https://api.themoviedb.org/3/genre/movie/list?api_key=8c04432a7ef30c6867723b9f144916e8&language=fr-FR";
