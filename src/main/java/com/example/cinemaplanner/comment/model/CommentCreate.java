@@ -12,9 +12,6 @@ import lombok.*;
 @NoArgsConstructor
 public class CommentCreate {
 
-    long dateCreated;
-    int notation;
     String comment;
     int idEvent;
-    boolean preComment;
 }

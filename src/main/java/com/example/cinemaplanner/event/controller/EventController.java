@@ -74,8 +74,8 @@ public class EventController {
                         event.setDtend(info.getEnd());
                         event.setDtstart(info.getStart());
                         event.setCreator(account.getFirstName());
-                        event.setPostComment(new ArrayList<>());
-                        event.setPreComment(new ArrayList<>());
+                        event.setComments(new ArrayList<>());
+                        event.setNotations(new ArrayList<>());
                         event.setDescription(searchRepository.findById(info.getIdMovie()));
                         if (event.getDescription() == null) {
                             System.out.println(event.getDescription());

@@ -14,6 +14,7 @@ import com.example.cinemaplanner.event.repository.EventRepository;
 import com.example.cinemaplanner.team.repository.TeamRepository;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Calendar;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -25,16 +26,11 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @CrossOrigin
 @RequestMapping("/comment")
 public class CommentController {
-    private final TeamRepository teamRepository;
-    private final AccountService accountService;
     private final EventRepository eventRepository;
     private final AuthenticationManager authenticationManager;
     private final CommentRepository commentRepository;
-    private final long minDate = 1400000000000L;
 
-    public CommentController(TeamRepository teamRepository, AccountService accountService, EventRepository eventRepository, AuthenticationManager authenticationManager, CommentRepository commentRepository) {
-        this.teamRepository = teamRepository;
-        this.accountService = accountService;
+    public CommentController(EventRepository eventRepository, AuthenticationManager authenticationManager, CommentRepository commentRepository) {
         this.eventRepository = eventRepository;
         this.authenticationManager = authenticationManager;
         this.commentRepository = commentRepository;
@@ -47,26 +43,26 @@ public class CommentController {
         if (account != null) {
             Event event = eventRepository.findById(comment.getIdEvent());
             if (event != null) {
-                if (comment.getDateCreated() < minDate) {
-                    throw new Exception("Wrong date");
-                }
-                Comment comment1 = new Comment();
-                comment1.setAuthor(account.getLogin());
-                comment1.setComment(comment.getComment());
-                comment1.setDateCreated(comment.getDateCreated());
-                comment1.setNotation(comment.getNotation());
-                if (comment.isPreComment()) {
-                    List<Comment> comments = event.getPreComment();
-                    comments.add(comment1);
-                    event.setPreComment(comments);
+                if (comment.getComment() != null) {
+                    if (!comment.getComment().isEmpty()) {
+                        Comment comment1 = new Comment();
+                        comment1.setAuthor(account.getLogin());
+                        comment1.setComment(comment.getComment());
+                        Calendar calendar = Calendar.getInstance();
+                        comment1.setDateCreated(calendar.getTime().getTime());
+                        comment1.setComment(comment.getComment());
+                        List<Comment> comments = event.getComments();
+                        comments.add(comment1);
+                        event.setComments(comments);
+                        commentRepository.save(comment1);
+                        eventRepository.save(event);
+                        return new CommentPublic(comment1);
+                    } else {
+                        throw new Exception("Comment is empty");
+                    }
                 } else {
-                    List<Comment> comments = event.getPostComment();
-                    comments.add(comment1);
-                    event.setPostComment(comments);
+                    throw new Exception("Comment is null");
                 }
-                commentRepository.save(comment1);
-                eventRepository.save(event);
-                return new CommentPublic(comment1);
             } else {
                 throw new Exception("Wrong event id");
             }
@@ -75,27 +71,5 @@ public class CommentController {
         }
     }
 
-    @RequestMapping(value = "update", method = POST)
-    public CommentPublic updateEvent(@RequestHeader(value = "token") String token, @RequestBody CommentUpdate commentUpdate) throws Exception {
-        authenticationManager.mustBeValidToken(token);
-        Account account = authenticationManager.getAccountFromToken(token);
-        if (account != null) {
-            Comment comment = commentRepository.findById(commentUpdate.getId());
-
-            if (comment != null) {
-                if (commentUpdate.getComment().isEmpty()) {
-                    comment.setComment(commentUpdate.getComment());
-                }
-                comment.setNotation(commentUpdate.getNotation());
-
-                commentRepository.save(comment);
-                return new CommentPublic(comment);
-            }
-
-            return new CommentPublic();
-        } else {
-            throw new AccountNotFoundException();
-        }
-    }
 
 }

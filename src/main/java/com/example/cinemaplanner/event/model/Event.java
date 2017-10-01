@@ -1,6 +1,7 @@
 package com.example.cinemaplanner.event.model;
 
 import com.example.cinemaplanner.comment.model.Comment;
+import com.example.cinemaplanner.notation.model.Notation;
 import lombok.*;
 
 import javax.persistence.*;
@@ -36,12 +37,12 @@ public class Event {
     long dtend;
 
     @OneToMany
-    @Column(name = "precomments")
-    List<Comment> preComment;
+    @Column(name = "comments")
+    List<Comment> comments;
 
     @OneToMany
-    @Column(name = "postcomments")
-    List<Comment> postComment;
+    @Column(name = "notations")
+    List<Notation> notations;
 
     @OneToOne
     @JoinColumn(name = "description")

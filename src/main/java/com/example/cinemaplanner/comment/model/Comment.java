@@ -26,9 +26,6 @@ public class Comment {
     @Column(name = "datecreated")
     long  dateCreated;
 
-    @Column(name = "notation")
-    int notation;
-
     @Column(name = "text")
     String comment;
 
