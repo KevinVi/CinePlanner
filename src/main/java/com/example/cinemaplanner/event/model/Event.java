@@ -29,7 +29,8 @@ public class Event {
 
     @Column(name = "creator")
     String creator;
-
+    @Column(name = "creatorId")
+    int creatorId;
     @Column(name = "datestart")
     long dtstart;
 

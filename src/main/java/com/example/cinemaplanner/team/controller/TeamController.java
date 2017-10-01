@@ -129,7 +129,7 @@ public class TeamController {
             List<Movie> movies = searchRepository.findAll();
             System.out.println("movie size" + movies.size());
             movies = movies.subList(0, 11);
-            System.out.println(movies);
+            System.oumment.println(movies);
             return movies;
         } else {
             throw new MustBeAuthenticatedException();

@@ -2,6 +2,7 @@ package com.example.cinemaplanner.event.model;
 
 import com.example.cinemaplanner.comment.model.Comment;
 import com.example.cinemaplanner.comment.model.CommentPublic;
+import com.example.cinemaplanner.notation.model.Notation;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -20,10 +21,11 @@ public class EventPublic {
     long id;
     String name;
     String creator;
+    int creatorId;
     long start;
     long end;
-    List<CommentPublic> preComments;
-    List<CommentPublic> postComments;
+    List<CommentPublic> comments;
+    List<Notation> notations;
     Movie movie;
 
     public EventPublic(Event event) {
@@ -35,16 +37,12 @@ public class EventPublic {
         List<CommentPublic> commentPublics = new ArrayList<>();
 
         for (Comment c :
-                event.getPreComment()) {
+                event.getComments()) {
             commentPublics.add(new CommentPublic(c));
         }
-        this.preComments = commentPublics;
-        commentPublics = new ArrayList<>();
-        for (Comment c :
-                event.getPostComment()) {
-            commentPublics.add(new CommentPublic(c));
-        }
-        this.postComments = commentPublics;
+        this.comments = commentPublics;
+        this.notations = event.getNotations();
         this.movie = event.getDescription();
+        this.creatorId = event.getCreatorId();
     }
 }

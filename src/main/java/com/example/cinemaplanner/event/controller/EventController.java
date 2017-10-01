@@ -74,6 +74,7 @@ public class EventController {
                         event.setDtend(info.getEnd());
                         event.setDtstart(info.getStart());
                         event.setCreator(account.getFirstName());
+                        event.setCreatorId(account.getId());
                         event.setComments(new ArrayList<>());
                         event.setNotations(new ArrayList<>());
                         event.setDescription(searchRepository.findById(info.getIdMovie()));
@@ -106,6 +107,9 @@ public class EventController {
             Event event = eventRepository.findById(info.getId());
 
             if (event != null) {
+                if (event.getCreatorId() != account.getId()) {
+                    throw new Exception("Not creator of this event");
+                }
                 if (info.getEnd() < minDate && info.getStart() < minDate && info.getName().isEmpty()) {
                     return new EventPublic(event);
                 }
@@ -179,22 +183,30 @@ public class EventController {
         Account account = authenticationManager.getAccountFromToken(token);
 
         if (account != null) {
-            List<Event> newEvents = new ArrayList<>();
-            for (Team team :
-                    account.getTeams()) {
-                if (team.getId() == info.getIdTeam()) {
-                    List<Event> events = team.getEvents();
-                    for (Event ev : events) {
-                        if (ev.getId() != info.getIdEvent()) {
-                            newEvents.add(ev);
-                        }
-                    }
-                    team.setEvents(newEvents);
-                    teamRepository.save(team);
-                    return true;
+
+            Event event = eventRepository.findById(info.getIdEvent());
+            if (event != null) {
+                if (event.getCreatorId() != account.getId()) {
+                    throw new Exception("Not creator of this event");
                 }
+                List<Event> newEvents = new ArrayList<>();
+                for (Team team :
+                        account.getTeams()) {
+                    if (team.getId() == info.getIdTeam()) {
+                        List<Event> events = team.getEvents();
+                        for (Event ev : events) {
+                            if (ev.getId() != info.getIdEvent()) {
+                                newEvents.add(ev);
+                            }
+                        }
+                        team.setEvents(newEvents);
+                        teamRepository.save(team);
+                        return true;
+                    }
+                }
+                throw new Exception("Wrong team id");
             }
-            throw new Exception("Wrong team id");
+            throw new Exception("Event not found");
         } else {
             throw new AccountNotFoundException();
         }
