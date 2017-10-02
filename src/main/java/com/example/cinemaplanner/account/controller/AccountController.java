@@ -178,7 +178,7 @@ public class AccountController {
             Account account = accountService.findByEmail(email.getEmail());
             if (account != null) {
 
-                emailService.restorePasswordConfirmation(email.getEmail(), "localhost:8080/account/restore/" + email.getEmail() + "/" + account.getPassword());
+                emailService.restorePasswordConfirmation(email.getEmail(), "https://salty-plateau-71086.herokuapp.com" + email.getEmail() + "/" + account.getPassword());
                 return true;
             } else {
                 throw new AccountNotFoundException();

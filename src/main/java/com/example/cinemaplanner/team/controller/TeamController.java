@@ -125,13 +125,18 @@ public class TeamController {
     }
 
     @RequestMapping(value = "learning", method = GET)
-    public List<Movie> requestLearning(@RequestHeader(value = "token") String token) {
+    public List<Movie> requestLearning(@RequestHeader(value = "token") String token, @RequestBody TeamId id) {
         authenticationManager.mustBeValidToken(token);
         Account account = authenticationManager.getAccountFromToken(token);
         if (account != null) {
+
             List<Movie> movies = searchRepository.findAll();
-            System.out.println("movie size" + movies.size());
-            movies = movies.subList(0, 11);
+            List<Learning> learnings = learningRepository.findByTeamId(id.getId());
+            if (learnings != null) {
+                movies.subList(learnings.size(), 11);
+            } else {
+                movies = movies.subList(0, 11);
+            }
             return movies;
         } else {
             throw new MustBeAuthenticatedException();
@@ -139,14 +144,19 @@ public class TeamController {
     }
 
     @RequestMapping(value = "learning/suggestion", method = POST)
-    public Movie suggestionLearning(@RequestHeader(value = "token") String token, @RequestBody TeamId id) {
+    public Movie suggestionLearning(@RequestHeader(value = "token") String token, @RequestBody TeamId id) throws Exception {
         authenticationManager.mustBeValidToken(token);
         Account account = authenticationManager.getAccountFromToken(token);
         if (account != null) {
             List<Learning> learnings = learningRepository.findByTeamId(id.getId());
             if (learnings != null) {
                 if (!learnings.isEmpty()) {
-                    test(id.getId());
+                    Movie movie = test(id.getId());
+                    if (movie != null) {
+                        return movie;
+                    } else {
+                        throw new Exception("Can't learn");
+                    }
                 }
             }
             return new Movie();
@@ -270,7 +280,7 @@ public class TeamController {
         }
     }
 
-    public void test(int teamId) {
+    public Movie test(int teamId) throws Exception {
 
 
         Gender genderRepo = genreRepository.findAll().get(0);
@@ -284,7 +294,6 @@ public class TeamController {
 
         //declare
         Attribute genre2 = new Attribute("genre2", gender);
-
 
         //declare
         Attribute genre3 = new Attribute("genre3", gender);
@@ -418,6 +427,7 @@ public class TeamController {
 
             testSet.setClassIndex(testSet.numAttributes() - 1);
 
+            List<Movie> toSuggest = new ArrayList<>();
             try {
                 NaiveBayes classifier = new NaiveBayes();
                 classifier.buildClassifier(isTrainingSet);
@@ -438,12 +448,35 @@ public class TeamController {
                             + " : " + testSet.get(i).toString(2)
                             + " : " + testSet.instance(i).toString(3)
                             + " : " + Double.toString(predictionDistribution[0]));
+                    if (testSet.instance(i).toString(3).equals("true")) {
+                        toSuggest.add(moviesSuggest.get(i));
+                    }
                 }
+                Movie movieToDisplay = null;
+                for (Movie m :
+                        toSuggest) {
+                    boolean isCotained = false;
+                    for (Learning l :
+                            pref) {
+                        if (m.getId() == l.getMovieId()) {
+                            isCotained = true;
+                        }
+                    }
+                    if (!isCotained) {
+                        movieToDisplay = m;
+                        break;
+                    }
+                }
+                return movieToDisplay;
+
+
             } catch (Exception ex) {
-                ex.printStackTrace();
+                throw new Exception("Can't predict");
             }
 
 
+        } else {
+            throw new Exception("Learning not complete");
         }
     }
 
