@@ -124,7 +124,7 @@ public class TeamController {
         }
     }
 
-    @RequestMapping(value = "learning", method = GET)
+    @RequestMapping(value = "learning", method = POST)
     public List<Movie> requestLearning(@RequestHeader(value = "token") String token, @RequestBody TeamId id) {
         authenticationManager.mustBeValidToken(token);
         Account account = authenticationManager.getAccountFromToken(token);
@@ -149,6 +149,7 @@ public class TeamController {
         Account account = authenticationManager.getAccountFromToken(token);
         if (account != null) {
             List<Learning> learnings = learningRepository.findByTeamId(id.getId());
+            System.out.println(learnings);
             if (learnings != null) {
                 if (!learnings.isEmpty()) {
                     Movie movie = test(id.getId());
@@ -194,6 +195,7 @@ public class TeamController {
                             learningRepository.save(learning);
                         }
                     }
+                    System.out.println(learningRepository.findByTeamId(body.getContent().get(0).getIdTeam()));
                     return true;
                 } else {
                     throw new Exception("Content is empty");
@@ -223,20 +225,35 @@ public class TeamController {
     }
 
     @RequestMapping(value = "invite", method = POST)
-    public boolean inviteToTeam(@RequestHeader(value = "token") String token, @RequestBody TeamContent invite) {
+    public boolean inviteToTeam(@RequestHeader(value = "token") String token, @RequestBody TeamContent invite) throws Exception {
         authenticationManager.mustBeValidToken(token);
         Account account = authenticationManager.getAccountFromToken(token);
         if (account != null) {
-            Account guest = accountService.getAccountByLogin(invite.getString());
-            if (guest != null) {
-                if (guest.getId() != account.getId()) {
-                    emailService.addToTeam(guest.getLogin(), "www.google.com");
+            Team team = teamRepository.findById(invite.getTeamId());
+            if (team!=null){
+                for (Team t :
+                        account.getTeams()) {
+                    if (t.getId() == team.getId()){
+                        if (invite.getString() != null) {
+                            Account guest = accountService.getAccountByLogin(invite.getString());
+                            if (guest != null) {
+                                if (guest.getId() != account.getId()) {
+                                    emailService.addToTeam(guest.getLogin(), "https://salty-plateau-71086.herokuapp.com/");
+                                }
+                            } else {
+                                //send mail to create and invite using creator and name
+                                emailService.addToTeamNewAccount(invite.getString(), "https://salty-plateau-71086.herokuapp.com/");
+                            }
+                            team.getPendingUsers().add(invite.getString());
+                            teamRepository.save(team);
+                            return true;
+                        }
+                    }
                 }
-            } else {
-                //send mail to create and invite using creator and name
-                emailService.addToTeamNewAccount(invite.getString(), "www.google.com");
+            }else{
+                throw new Exception("Team not found");
             }
-            return true;
+            throw new Exception("Wrong Parameters");
         } else {
             throw new MustBeAuthenticatedException();
         }
@@ -261,7 +278,7 @@ public class TeamController {
 
 
     @RequestMapping(value = "join", method = POST)
-    public boolean pendingTeams(@RequestHeader(value = "token") String token, @RequestBody TeamId id) throws Exception {
+    public boolean joinTeams(@RequestHeader(value = "token") String token, @RequestBody TeamId id) throws Exception {
         authenticationManager.mustBeValidToken(token);
         Account account = authenticationManager.getAccountFromToken(token);
         if (account != null) {

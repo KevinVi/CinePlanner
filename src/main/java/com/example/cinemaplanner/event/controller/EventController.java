@@ -64,30 +64,54 @@ public class EventController {
             throw new Exception("Wrong parameters");
         } else {
             if (account != null) {
-                System.out.println("coucou");
                 for (Team team :
                         account.getTeams()) {
-                    System.out.println("coucou2");
                     if (team.getId() == info.getIdTeam()) {
-                        Event event = new Event();
-                        event.setName(info.getName());
-                        event.setDtend(info.getEnd());
-                        event.setDtstart(info.getStart());
-                        event.setCreator(account.getFirstName());
-                        event.setCreatorId(account.getId());
-                        event.setComments(new ArrayList<>());
-                        event.setNotations(new ArrayList<>());
-                        event.setDescription(searchRepository.findById(info.getIdMovie()));
-                        if (event.getDescription() == null) {
-                            System.out.println(event.getDescription());
-                            throw new Exception("No movie selected");
+                        Movie movie = searchRepository.findById(info.getIdMovie());
+
+                        if (movie != null) {
+                            Event event = new Event();
+                            event.setName(info.getName());
+                            event.setDtend(info.getEnd());
+                            event.setDtstart(info.getStart());
+                            event.setCreator(account.getFirstName());
+                            event.setCreatorId(account.getId());
+                            event.setComments(new ArrayList<>());
+                            event.setNotations(new ArrayList<>());
+                            event.setDescription(searchRepository.findById(info.getIdMovie()));
+                            if (event.getDescription() == null) {
+                                System.out.println(event.getDescription());
+                                throw new Exception("No movie selected");
+                            }
+                            Learning learning = new Learning();
+                            learning.setAnswer("true");
+                            learning.setMovieId(movie.getId());
+                            learning.setTeamId(info.getIdTeam());
+                            if (!movie.getGenre_ids().isEmpty()) {
+                                learning.setGender1(String.valueOf(movie.getGenre_ids().get(0)));
+                            } else {
+                                learning.setGender1("0");
+                            }
+                            if (movie.getGenre_ids().size() > 1) {
+                                learning.setGender2(String.valueOf(movie.getGenre_ids().get(1)));
+                            } else {
+                                learning.setGender2("0");
+                            }
+                            if (movie.getGenre_ids().size() > 2) {
+                                learning.setGender3(String.valueOf(movie.getGenre_ids().get(2)));
+                            } else {
+                                learning.setGender3("0");
+                            }
+                            learningRepository.save(learning);
+                            eventRepository.save(event);
+                            List<Event> events = team.getEvents();
+                            events.add(event);
+                            team.setEvents(events);
+                            teamRepository.save(team);
+                            return new EventPublic(event);
+                        } else {
+                            throw new Exception("Movie not found");
                         }
-                        eventRepository.save(event);
-                        List<Event> events = team.getEvents();
-                        events.add(event);
-                        team.setEvents(events);
-                        teamRepository.save(team);
-                        return new EventPublic(event);
                     }
                 }
                 throw new Exception("Wrong team id");

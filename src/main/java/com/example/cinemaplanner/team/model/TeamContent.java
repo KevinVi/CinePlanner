@@ -12,4 +12,5 @@ import lombok.*;
 @NoArgsConstructor
 public class TeamContent {
     String string;
+    int teamId;
 }
