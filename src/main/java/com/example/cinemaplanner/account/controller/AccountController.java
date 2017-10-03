@@ -11,6 +11,9 @@ import com.example.cinemaplanner.config.PasswordGenerator;
 import com.example.cinemaplanner.mail.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletResponse;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -178,7 +181,7 @@ public class AccountController {
             Account account = accountService.findByEmail(email.getEmail());
             if (account != null) {
 
-                emailService.restorePasswordConfirmation(email.getEmail(), "https://salty-plateau-71086.herokuapp.com" + email.getEmail() + "/" + account.getPassword());
+                emailService.restorePasswordConfirmation(email.getEmail(), "https://salty-plateau-71086.herokuapp.com/account/restore/" + email.getEmail() + "/" + account.getPassword());
                 return true;
             } else {
                 throw new AccountNotFoundException();
@@ -198,7 +201,7 @@ public class AccountController {
      * @throws Exception Account not valid
      */
     @RequestMapping(value = "/restore/{email}/{id}", method = GET)
-    public boolean restoreEmail(@PathVariable(value = "email") String email, @PathVariable(value = "id") String id) throws Exception {
+    public ModelAndView restoreEmail(@PathVariable(value = "email") String email, @PathVariable(value = "id") String id) throws Exception {
         try {
             Account account = accountService.findByEmail(email);
             if (account != null) {
@@ -208,6 +211,7 @@ public class AccountController {
                     emailService.restorePasswordSend(email, password);
                     account.setPassword(password);
                     accountService.updateAccount(account);
+                    return new ModelAndView("redirect:/");
                 }
             } else {
                 throw new AccountNotFoundException();
@@ -216,7 +220,8 @@ public class AccountController {
         } catch (Exception e) {
             throw new AccountNotFoundException();
         }
-        return true;
+        return new ModelAndView("redirect:/");
+
     }
 
 
