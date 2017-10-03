@@ -230,18 +230,28 @@ public class TeamController {
         Account account = authenticationManager.getAccountFromToken(token);
         if (account != null) {
             Team team = teamRepository.findById(invite.getTeamId());
-            if (team!=null){
+            if (team != null) {
                 for (Team t :
                         account.getTeams()) {
-                    if (t.getId() == team.getId()){
+                    if (t.getId() == team.getId()) {
                         if (invite.getString() != null) {
                             Account guest = accountService.getAccountByLogin(invite.getString());
                             if (guest != null) {
                                 if (guest.getId() != account.getId()) {
+                                    for (Team teamguest : guest.getTeams()) {
+                                        if (teamguest.getId() == invite.getTeamId()) {
+                                            throw new Exception("Already in team");
+                                        }
+                                    }
                                     emailService.addToTeam(guest.getLogin(), "https://salty-plateau-71086.herokuapp.com/");
                                 }
                             } else {
                                 //send mail to create and invite using creator and name
+                                for (String pending : team.getPendingUsers()) {
+                                    if (pending.equals(invite.getString())) {
+                                        throw new Exception("Already invited");
+                                    }
+                                }
                                 emailService.addToTeamNewAccount(invite.getString(), "https://salty-plateau-71086.herokuapp.com/");
                             }
                             team.getPendingUsers().add(invite.getString());
@@ -250,7 +260,7 @@ public class TeamController {
                         }
                     }
                 }
-            }else{
+            } else {
                 throw new Exception("Team not found");
             }
             throw new Exception("Wrong Parameters");
