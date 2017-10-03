@@ -128,19 +128,27 @@ public class TeamController {
     }
 
     @RequestMapping(value = "learning", method = POST)
-    public List<Movie> requestLearning(@RequestHeader(value = "token") String token, @RequestBody TeamId id) {
+    public List<Movie> requestLearning(@RequestHeader(value = "token") String token, @RequestBody TeamId id) throws Exception {
         authenticationManager.mustBeValidToken(token);
         Account account = authenticationManager.getAccountFromToken(token);
         if (account != null) {
 
-            List<Movie> movies = searchRepository.findAll();
-            List<Learning> learnings = learningRepository.findByTeamId(id.getId());
-            if (learnings != null) {
-                movies.subList(learnings.size(), 11);
+            List<Movie> moviesTest = searchRepository.findAll();
+            if (id.getId() > 0) {
+                List<Learning> learnings = learningRepository.findByTeamId(id.getId());
+                System.out.println(learnings.size());
+                System.out.println(id.getId());
+                if (learnings.size() >= 11) {
+                    throw new Exception("Already trained");
+                } else if (learnings.size() > 0) {
+                    moviesTest.subList(learnings.size(), 11);
+                } else {
+                    moviesTest = moviesTest.subList(0, 11);
+                }
+                return moviesTest;
             } else {
-                movies = movies.subList(0, 11);
+                throw new Exception("wrong id");
             }
-            return movies;
         } else {
             throw new MustBeAuthenticatedException();
         }
@@ -199,6 +207,7 @@ public class TeamController {
                         }
                     }
                     System.out.println(learningRepository.findByTeamId(body.getContent().get(0).getIdTeam()));
+                    System.out.println("size" + learningRepository.findByTeamId(body.getContent().get(0).getIdTeam()).size());
                     return true;
                 } else {
                     throw new Exception("Content is empty");
@@ -502,6 +511,9 @@ public class TeamController {
                         break;
                     }
                 }
+
+                System.out.println("size : " + learningRepository.findByTeamId(teamId).size());
+                System.out.println("learning :" + learningRepository.findByTeamId(teamId));
                 return movieToDisplay;
 
 
