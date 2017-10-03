@@ -13,9 +13,12 @@ import java.util.List;
  */
 
 @Repository
-public interface TeamRepository extends JpaRepository<Team, String> {
+public interface TeamRepository extends JpaRepository<Team, Integer> {
     @Query("From Team t where :login member t.pendingUsers")
     List<Team> findByLogin(@Param("login") String login);
+
+    @Query("UPDATE Team t set t.pendingUsers = :pending where t.id = :id")
+    void updateTeam(@Param("id") int id, @Param("pending") List<String> pending);
 
     Team findById(int id);
 }

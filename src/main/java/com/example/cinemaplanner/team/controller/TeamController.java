@@ -77,7 +77,10 @@ public class TeamController {
             team.setCreator(account.getLogin());
             if (info.getUsers() != null) {
                 team.setPendingUsers(info.getUsers());
+            } else {
+                team.setPendingUsers(new ArrayList<>());
             }
+            team.setEvents(new ArrayList<>());
             account.getTeams().add(team);
 
             if (info.getUsers() != null) {
@@ -236,6 +239,7 @@ public class TeamController {
                     if (t.getId() == team.getId()) {
                         if (invite.getString() != null) {
                             Account guest = accountService.getAccountByLogin(invite.getString());
+                            System.out.println("guest" + guest);
                             if (guest != null) {
                                 if (guest.getId() != account.getId()) {
                                     for (Team teamguest : guest.getTeams()) {
@@ -248,6 +252,8 @@ public class TeamController {
                             } else {
                                 //send mail to create and invite using creator and name
                                 for (String pending : team.getPendingUsers()) {
+                                    System.out.println("pending" + pending);
+                                    System.out.println("invite" + invite.getString());
                                     if (pending.equals(invite.getString())) {
                                         throw new Exception("Already invited");
                                     }
@@ -293,13 +299,15 @@ public class TeamController {
         Account account = authenticationManager.getAccountFromToken(token);
         if (account != null) {
             Team team = teamRepository.findById(id.getId());
+            System.out.println("team : " + team.toString());
+            System.out.println("account : " + account.getTeams().toString());
             if (team.getPendingUsers().contains(account.getLogin())) {
                 team.getPendingUsers().remove(account.getLogin());
             } else {
                 throw new Exception("you are not in this team");
             }
-            account.getTeams().add(team);
             teamRepository.save(team);
+            account.getTeams().add(team);
             accountService.saveAccount(account);
             return true;
         } else {

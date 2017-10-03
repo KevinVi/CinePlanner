@@ -38,7 +38,7 @@ public class Account implements Serializable {
     @Column(name = "lastname")
     private String lastName;
 
-    @OneToMany
+    @ManyToMany
     @Column(name = "teams")
     private List<Team> teams;
 }
