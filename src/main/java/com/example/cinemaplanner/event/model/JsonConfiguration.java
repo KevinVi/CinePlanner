@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 /**
- * Created by Kevin on 24/09/2017 for ZKY.
+ * Created by Kevin on 24/09/2017 for CinePlanner.
  */
 @Getter
 @Setter

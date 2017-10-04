@@ -1,7 +1,7 @@
 package com.example.cinemaplanner.account.model;
 
 /**
- * Created by Andreï on 02/04/2017 for ZKY.
+ * Created by Andreï on 02/04/2017 for CinePlanner.
  * Object account with column db
  */
 

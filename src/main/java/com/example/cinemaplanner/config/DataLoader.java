@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by Kevin on 09/07/2017 for ZKY for ZKY.
+ * Created by Kevin on 09/07/2017 for CinePlanner for CinePlanner.
  * Create at least one account when the server start
  */
 @Component

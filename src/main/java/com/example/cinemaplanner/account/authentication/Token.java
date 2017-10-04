@@ -3,7 +3,7 @@ package com.example.cinemaplanner.account.authentication;
 import lombok.*;
 
 /**
- * Created by Andreï on 10/04/2016 for ZKY.
+ * Created by Andreï on 10/04/2016 for CinePlanner.
  * Body object token.
  */
 

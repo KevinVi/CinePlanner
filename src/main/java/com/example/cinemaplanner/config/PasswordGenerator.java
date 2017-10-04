@@ -1,7 +1,7 @@
 package com.example.cinemaplanner.config;
 
 /**
- * Created by Kevin on 10/07/2017 for ZKY.
+ * Created by Kevin on 10/07/2017 for CinePlanner.
  * Password generator
  */
 

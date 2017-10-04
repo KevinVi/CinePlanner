@@ -28,7 +28,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
- * Created by Kevin on 06/08/2017 for ZKY.
+ * Created by Kevin on 06/08/2017 for CinePlanner.
  */
 
 @RestController

@@ -3,7 +3,7 @@ package com.example.cinemaplanner.account.model;
 import lombok.*;
 
 /**
- * Created by Andreï on 15/04/2016 for ZKY.
+ * Created by Andreï on 15/04/2016 for CinePlanner.
  * Object clean returning only useful data.
  */
 @Getter

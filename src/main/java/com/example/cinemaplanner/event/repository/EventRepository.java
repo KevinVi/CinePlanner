@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * Created by Kevin on 13/08/2017 for ZKY.
+ * Created by Kevin on 13/08/2017 for CinePlanner.
  */
 
 @Repository

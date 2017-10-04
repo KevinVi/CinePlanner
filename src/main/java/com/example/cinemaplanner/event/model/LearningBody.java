@@ -5,7 +5,7 @@ import lombok.*;
 import java.util.List;
 
 /**
- * Created by Kevin on 30/09/2017 for ZKY.
+ * Created by Kevin on 30/09/2017 for CinePlanner.
  */
 @Getter
 @Setter

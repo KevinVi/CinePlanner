@@ -8,7 +8,7 @@ import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 
 /**
- * Created by Kevin on 09/07/2017 for ZKY.
+ * Created by Kevin on 09/07/2017 for CinePlanner.
  */
 @Service
 public class MailService {

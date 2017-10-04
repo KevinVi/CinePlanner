@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Created by Andreï on 02/04/2017 for ZKY.
+ * Created by Andreï on 02/04/2017 for CinePlanner.
  * Service to prepare some action of repository requests
  */
 

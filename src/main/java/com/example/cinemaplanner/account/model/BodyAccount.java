@@ -3,7 +3,7 @@ package com.example.cinemaplanner.account.model;
 import lombok.*;
 
 /**
- * Created by Kevin on 06/08/2017 for ZKY.
+ * Created by Kevin on 06/08/2017 for CinePlanner.
  */
 @Getter
 @Setter

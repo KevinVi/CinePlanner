@@ -20,7 +20,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 
 /**
- * Created by Andreï on 02/04/2017 for ZKY.
+ * Created by Andreï on 02/04/2017 for CinePlanner.
  */
 
 @RestController

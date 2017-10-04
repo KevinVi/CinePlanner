@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Kevin on 06/08/2017 for ZKY.
+ * Created by Kevin on 06/08/2017 for CinePlanner.
  */
 
 @Getter

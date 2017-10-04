@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import java.security.MessageDigest;
 
 /**
- * Created by Andreï on 07/04/2017 for ZKY.
+ * Created by Andreï on 07/04/2017 for CinePlanner.
  */
 
 

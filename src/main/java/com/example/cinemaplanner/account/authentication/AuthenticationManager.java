@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Created by Andreï on 10/04/2017 for ZKY.
+ * Created by Andreï on 10/04/2017 for CinePlanner.
  */
 @Component
 public class AuthenticationManager {

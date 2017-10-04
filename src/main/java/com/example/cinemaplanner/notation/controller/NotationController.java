@@ -15,7 +15,7 @@ import java.util.List;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
- * Created by Kevin on 01/10/2017 for ZKY.
+ * Created by Kevin on 01/10/2017 for CinePlanner.
  */
 @RestController
 @CrossOrigin

@@ -6,7 +6,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 /**
- * Created by moi on 10/07/2017 for ZKY.
+ * Created by moi on 10/07/2017 for CinePlanner.
  * <p>
  * Using Thymelief to create mail templates
  */

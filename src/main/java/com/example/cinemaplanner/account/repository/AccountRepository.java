@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * Created by Andreï on 02/04/2017 for ZKY.
+ * Created by Andreï on 02/04/2017 for CinePlanner.
  * Repository for Account
  */
 
