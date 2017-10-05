@@ -4,7 +4,9 @@ import com.example.cinemaplanner.account.authentication.AuthenticationManager;
 import com.example.cinemaplanner.account.exceptions.MustBeAuthenticatedException;
 import com.example.cinemaplanner.account.model.Account;
 import com.example.cinemaplanner.account.service.AccountService;
-import com.example.cinemaplanner.event.model.*;
+import com.example.cinemaplanner.event.model.json.JsonSearchPage;
+import com.example.cinemaplanner.event.model.json.JsonSearchResult;
+import com.example.cinemaplanner.event.model.learning.*;
 import com.example.cinemaplanner.event.repository.GenreRepository;
 import com.example.cinemaplanner.event.repository.LearningRepository;
 import com.example.cinemaplanner.event.repository.SearchRepository;
@@ -24,7 +26,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
@@ -365,48 +366,48 @@ public class TeamController {
 
 
         if (pref != null) {
-            //petit jeu de donné
-
-            ArrayList<String> genreNumero1Bis = new ArrayList<>();
-            ArrayList<String> genreNumero2Bis = new ArrayList<>();
-            ArrayList<String> genreNumero3Bis = new ArrayList<>();
+            //Preparation du jeu de donné d'apprentissage
+            ArrayList<String> genreNumero1 = new ArrayList<>();
+            ArrayList<String> genreNumero2 = new ArrayList<>();
+            ArrayList<String> genreNumero3 = new ArrayList<>();
             ArrayList<String> resultBis = new ArrayList<>();
 
 
+            //remplissage
             for (Learning l :
                     pref) {
-                genreNumero1Bis.add(l.getGender1());
-                genreNumero2Bis.add(l.getGender2());
-                genreNumero3Bis.add(l.getGender3());
+                genreNumero1.add(l.getGender1());
+                genreNumero2.add(l.getGender2());
+                genreNumero3.add(l.getGender3());
                 resultBis.add(l.getAnswer());
 
-                System.out.println("l->" + l.toString());
             }
 
-            System.out.println("pref size->" + pref.size());
 
+            //Creation des instances du jeu de donné
             Instances isTrainingSet = new Instances("training", atts, 10);
             isTrainingSet.setClassIndex(3);
 
 
             for (int i = 0; i < resultBis.size(); i++) {
                 Instance iExample = new DenseInstance(atts.size());
-                iExample.setValue(atts.get(0), genreNumero1Bis.get(i));
-                if (genreNumero2Bis.get(i).equals("0")) {
+                iExample.setValue(atts.get(0), genreNumero1.get(i));
+                if (genreNumero2.get(i).equals("0")) {
                     iExample.setValue(atts.get(1), Utils.missingValue());
                 } else {
-                    iExample.setValue(atts.get(1), genreNumero2Bis.get(i));
+                    iExample.setValue(atts.get(1), genreNumero2.get(i));
                 }
-                if (genreNumero3Bis.get(i).equals("0")) {
+                if (genreNumero3.get(i).equals("0")) {
                     iExample.setValue(atts.get(2), Utils.missingValue());
                 } else {
-                    iExample.setValue(atts.get(2), genreNumero3Bis.get(i));
+                    iExample.setValue(atts.get(2), genreNumero3.get(i));
                 }
                 iExample.setValue(atts.get(3), resultBis.get(i));
                 isTrainingSet.add(iExample);
 
             }
 
+            //Prepartation du jeu de donné de test
             List<String> genreNew1 = new ArrayList<>();
             List<String> genreNew2 = new ArrayList<>();
             List<String> genreNew3 = new ArrayList<>();
@@ -417,6 +418,7 @@ public class TeamController {
             System.out.println("My date" + date);
 
 
+            //lien vers API pour récupéré les film a venir
             String uri = "https://api.themoviedb.org/3/discover/movie?api_key=8c04432a7ef30c6867723b9f144916e8&language=fr-FR&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&primary_release_date.gte=" + date;
 
             String link = "https://image.tmdb.org/t/p/w500";
@@ -427,6 +429,7 @@ public class TeamController {
             JsonSearchPage searchPage = restTemplate.getForObject(uri, JsonSearchPage.class);
             List<String> names = new ArrayList<>();
 
+            //Replissage des données
             List<Movie> moviesSuggest = new ArrayList<>();
             for (JsonSearchResult res :
                     searchPage.getResults()) {
@@ -456,6 +459,7 @@ public class TeamController {
                 }
             }
 
+            //creation des instances de test
             Instances testSet = new Instances("test", atts, 10);
 
             for (int i = 0; i < genreNew1.size(); i++) {
@@ -479,6 +483,8 @@ public class TeamController {
 
             List<Movie> toSuggest = new ArrayList<>();
             try {
+
+                //Définition du classifier et entrainement du premier jeu de donné
                 NaiveBayes classifier = new NaiveBayes();
                 classifier.buildClassifier(isTrainingSet);
 
@@ -489,6 +495,7 @@ public class TeamController {
                 System.out.println("training set" + isTrainingSet.toString());
                 for (int i = 0; i < testSet.size(); i++) {
 
+                    //application de l'entrainement sur le 2eme jeux de donné
                     double label = classifier.classifyInstance(testSet.instance(i));
                     double[] predictionDistribution = classifier.distributionForInstance(testSet.instance(i));
                     testSet.instance(i).setClassValue(label);
@@ -502,6 +509,8 @@ public class TeamController {
                         toSuggest.add(moviesSuggest.get(i));
                     }
                 }
+
+                //filtre des films
                 Movie movieToDisplay = null;
                 for (Movie m :
                         toSuggest) {
@@ -517,9 +526,6 @@ public class TeamController {
                         break;
                     }
                 }
-
-                System.out.println("size : " + learningRepository.findByTeamId(teamId).size());
-                System.out.println("learning :" + learningRepository.findByTeamId(teamId));
                 return movieToDisplay;
 
 

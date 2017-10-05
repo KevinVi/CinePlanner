@@ -1,4 +1,4 @@
-package com.example.cinemaplanner.event.model;
+package com.example.cinemaplanner.event.model.event;
 
 import lombok.*;
 

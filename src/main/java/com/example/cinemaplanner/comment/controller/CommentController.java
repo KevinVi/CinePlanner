@@ -3,15 +3,12 @@ package com.example.cinemaplanner.comment.controller;
 import com.example.cinemaplanner.account.authentication.AuthenticationManager;
 import com.example.cinemaplanner.account.exceptions.AccountNotFoundException;
 import com.example.cinemaplanner.account.model.Account;
-import com.example.cinemaplanner.account.service.AccountService;
 import com.example.cinemaplanner.comment.model.Comment;
 import com.example.cinemaplanner.comment.model.CommentCreate;
 import com.example.cinemaplanner.comment.model.CommentPublic;
-import com.example.cinemaplanner.comment.model.CommentUpdate;
 import com.example.cinemaplanner.comment.repository.CommentRepository;
-import com.example.cinemaplanner.event.model.Event;
+import com.example.cinemaplanner.event.model.event.Event;
 import com.example.cinemaplanner.event.repository.EventRepository;
-import com.example.cinemaplanner.team.repository.TeamRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Calendar;

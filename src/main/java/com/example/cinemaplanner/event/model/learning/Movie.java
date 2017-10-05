@@ -1,5 +1,7 @@
-package com.example.cinemaplanner.event.model;
+package com.example.cinemaplanner.event.model.learning;
 
+import com.example.cinemaplanner.event.model.json.JsonSearchGenre;
+import com.example.cinemaplanner.event.model.json.JsonSearchResult;
 import lombok.*;
 
 import javax.persistence.*;

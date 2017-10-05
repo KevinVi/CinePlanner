@@ -1,6 +1,6 @@
 package com.example.cinemaplanner.team.model;
 
-import com.example.cinemaplanner.event.model.Event;
+import com.example.cinemaplanner.event.model.event.Event;
 import lombok.*;
 
 import javax.persistence.*;

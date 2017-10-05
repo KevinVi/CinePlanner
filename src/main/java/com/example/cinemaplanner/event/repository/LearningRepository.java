@@ -1,7 +1,6 @@
 package com.example.cinemaplanner.event.repository;
 
-import com.example.cinemaplanner.event.model.Learning;
-import com.example.cinemaplanner.event.model.Movie;
+import com.example.cinemaplanner.event.model.learning.Learning;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

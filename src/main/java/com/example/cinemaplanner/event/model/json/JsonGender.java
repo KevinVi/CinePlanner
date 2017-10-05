@@ -1,7 +1,9 @@
-package com.example.cinemaplanner.event.model;
+package com.example.cinemaplanner.event.model.json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+
+import java.util.List;
 
 /**
  * Created by Kevin on 30/09/2017 for CinePlanner.
@@ -12,9 +14,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class JsonGenderArray {
-    @JsonProperty("id")
-    public int id;
-    @JsonProperty("name")
-    public String name;
+public class JsonGender {
+    @JsonProperty("genres")
+    public List<JsonGenderArray> genres;
 }

@@ -1,7 +1,6 @@
 package com.example.cinemaplanner.event.repository;
 
-import com.example.cinemaplanner.event.model.Gender;
-import com.example.cinemaplanner.event.model.Learning;
+import com.example.cinemaplanner.event.model.learning.Gender;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

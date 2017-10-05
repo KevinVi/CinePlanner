@@ -1,7 +1,7 @@
 package com.example.cinemaplanner.team.model;
 
-import com.example.cinemaplanner.event.model.Event;
-import com.example.cinemaplanner.event.model.EventPublic;
+import com.example.cinemaplanner.event.model.event.Event;
+import com.example.cinemaplanner.event.model.event.EventPublic;
 import lombok.*;
 
 import java.util.ArrayList;

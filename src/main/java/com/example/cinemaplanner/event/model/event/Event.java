@@ -1,6 +1,7 @@
-package com.example.cinemaplanner.event.model;
+package com.example.cinemaplanner.event.model.event;
 
 import com.example.cinemaplanner.comment.model.Comment;
+import com.example.cinemaplanner.event.model.learning.Movie;
 import com.example.cinemaplanner.notation.model.Notation;
 import lombok.*;
 

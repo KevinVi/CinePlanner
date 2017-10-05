@@ -3,7 +3,7 @@ package com.example.cinemaplanner.notation.controller;
 import com.example.cinemaplanner.account.authentication.AuthenticationManager;
 import com.example.cinemaplanner.account.exceptions.AccountNotFoundException;
 import com.example.cinemaplanner.account.model.Account;
-import com.example.cinemaplanner.event.model.Event;
+import com.example.cinemaplanner.event.model.event.Event;
 import com.example.cinemaplanner.event.repository.EventRepository;
 import com.example.cinemaplanner.notation.model.Notation;
 import com.example.cinemaplanner.notation.model.NotationCreate;

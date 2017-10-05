@@ -1,8 +1,6 @@
-package com.example.cinemaplanner.event.model;
+package com.example.cinemaplanner.event.model.json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 
 import java.util.List;

@@ -1,6 +1,8 @@
-package com.example.cinemaplanner.event.model;
+package com.example.cinemaplanner.event.model.learning;
 
 import lombok.*;
+
+import java.util.List;
 
 /**
  * Created by Kevin on 30/09/2017 for CinePlanner.
@@ -10,8 +12,6 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class LearningContent {
-    int idTeam ;
-    int idMovie;
-    boolean liked;
+public class LearningBody {
+    List<LearningContent> content;
 }

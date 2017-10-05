@@ -2,7 +2,11 @@ package com.example.cinemaplanner.config;
 
 import com.example.cinemaplanner.account.model.Account;
 import com.example.cinemaplanner.account.service.AccountService;
-import com.example.cinemaplanner.event.model.*;
+import com.example.cinemaplanner.event.model.json.JsonGender;
+import com.example.cinemaplanner.event.model.json.JsonGenderArray;
+import com.example.cinemaplanner.event.model.json.JsonSearchPage;
+import com.example.cinemaplanner.event.model.learning.Gender;
+import com.example.cinemaplanner.event.model.learning.Movie;
 import com.example.cinemaplanner.event.repository.GenreRepository;
 import com.example.cinemaplanner.event.repository.SearchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
