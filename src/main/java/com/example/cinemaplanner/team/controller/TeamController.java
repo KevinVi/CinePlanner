@@ -108,6 +108,7 @@ public class TeamController {
 
     }
 
+
     @RequestMapping(value = "leave", method = POST)
     public boolean leaveTeam(@RequestHeader(value = "token") String token, @RequestBody TeamId id) {
         authenticationManager.mustBeValidToken(token);
