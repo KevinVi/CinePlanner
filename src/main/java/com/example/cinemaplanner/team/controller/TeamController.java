@@ -462,6 +462,10 @@ public class TeamController {
 
             for (int i = 0; i < genreNew1.size(); i++) {
                 Instance iExample = new DenseInstance(atts.size());
+                System.out.println("size atts " + atts.size());
+                System.out.println("size atts " + atts.get(0));
+                System.out.println("size genre " + genreNew1.get(i));
+
                 iExample.setValue(atts.get(0), genreNew1.get(i));
                 if (genreNew2.get(i).equals("0")) {
                     iExample.setValue(atts.get(1), Utils.missingValue());
