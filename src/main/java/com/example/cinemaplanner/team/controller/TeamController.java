@@ -197,12 +197,18 @@ public class TeamController {
                             learning.setTeamId(content.getIdTeam());
                             if (!movie.getGenre_ids().isEmpty()) {
                                 learning.setGender1(String.valueOf(movie.getGenre_ids().get(0)));
+                            }else{
+                                learning.setGender1("0");
                             }
                             if (movie.getGenre_ids().size() > 1) {
                                 learning.setGender2(String.valueOf(movie.getGenre_ids().get(1)));
+                            }else{
+                                learning.setGender2("0");
                             }
                             if (movie.getGenre_ids().size() > 2) {
                                 learning.setGender3(String.valueOf(movie.getGenre_ids().get(2)));
+                            }else{
+                                learning.setGender3("0");
                             }
                             learningRepository.save(learning);
                         }
