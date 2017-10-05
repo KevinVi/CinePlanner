@@ -341,6 +341,7 @@ public class TeamController {
                 genderInteger) {
             gender.add(String.valueOf(integer));
         }
+        System.out.println("gender" + gender)
         Attribute genre1 = new Attribute("genre1", gender);
 
         //declare
