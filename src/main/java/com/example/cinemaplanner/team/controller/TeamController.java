@@ -466,7 +466,11 @@ public class TeamController {
                 System.out.println("size atts " + atts.get(0));
                 System.out.println("size genre " + genreNew1.get(i));
 
-                iExample.setValue(atts.get(0), genreNew1.get(i));
+                if (genreNew1.get(i).equals("0")) {
+                    iExample.setValue(atts.get(0), Utils.missingValue());
+                }else{              
+                    iExample.setValue(atts.get(0), genreNew1.get(i));
+                }
                 if (genreNew2.get(i).equals("0")) {
                     iExample.setValue(atts.get(1), Utils.missingValue());
                 } else {
