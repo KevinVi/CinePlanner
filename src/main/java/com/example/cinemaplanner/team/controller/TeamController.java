@@ -109,6 +109,7 @@ public class TeamController {
 
     }
 
+
     @RequestMapping(value = "leave", method = POST)
     public boolean leaveTeam(@RequestHeader(value = "token") String token, @RequestBody TeamId id) {
         authenticationManager.mustBeValidToken(token);
@@ -207,7 +208,7 @@ public class TeamController {
                             }
                             if (movie.getGenre_ids().size() > 2) {
                                 learning.setGender3(String.valueOf(movie.getGenre_ids().get(2)));
-                            } else {
+                            }else{
                                 learning.setGender3("0");
                             }
                             learningRepository.save(learning);
@@ -341,6 +342,7 @@ public class TeamController {
                 genderInteger) {
             gender.add(String.valueOf(integer));
         }
+        System.out.println("gender" + gender);
         Attribute genre1 = new Attribute("genre1", gender);
 
         //declare
@@ -464,7 +466,15 @@ public class TeamController {
 
             for (int i = 0; i < genreNew1.size(); i++) {
                 Instance iExample = new DenseInstance(atts.size());
-                iExample.setValue(atts.get(0), genreNew1.get(i));
+                System.out.println("size atts " + atts.size());
+                System.out.println("size atts " + atts.get(0));
+                System.out.println("size genre " + genreNew1.get(i));
+
+                if (genreNew1.get(i).equals("0")) {
+                    iExample.setValue(atts.get(0), Utils.missingValue());
+                }else{              
+                    iExample.setValue(atts.get(0), genreNew1.get(i));
+                }
                 if (genreNew2.get(i).equals("0")) {
                     iExample.setValue(atts.get(1), Utils.missingValue());
                 } else {
